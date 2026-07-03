@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const prisma = require("../prismaClient");
 
 const router = express.Router();
+const { verificarToken, soloAdmin } = require('../middleware/auth');
 
 router.post("/login", async (req, res) => {
   const { usuario, password } = req.body;
@@ -38,7 +39,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/registrar", async (req, res) => {
+router.post("/registrar", verificarToken, soloAdmin, async (req, res) => {
   const { nombre, usuario, password, rol } = req.body;
 
   try {
