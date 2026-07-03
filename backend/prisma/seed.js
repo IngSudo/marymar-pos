@@ -43,7 +43,7 @@ async function main() {
     },
   });
 
-  console.log("Seed completado ✅");
+  console.log("Seed completado");
 }
 
 main()
