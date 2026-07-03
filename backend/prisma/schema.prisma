@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Rol {
+  ADMIN
+  CAJERO
+}
+
+enum TipoGasto {
+  FIJO
+  VARIABLE
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  usuario   String   @unique
+  password  String
+  rol       Rol
+  createdAt DateTime @default(now())
+  ventas    Venta[]
+}
+
+model Categoria {
+  id        Int        @id @default(autoincrement())
+  nombre    String
+  productos Producto[]
+}
+
+model Producto {
+  id             Int             @id @default(autoincrement())
+  nombre         String
+  precio         Decimal         @db.Decimal(10, 2)
+  costoEstimado  Decimal?        @db.Decimal(10, 2)
+  activo         Boolean         @default(true)
+  categoriaId    Int
+  categoria      Categoria       @relation(fields: [categoriaId], references: [id])
+  detalleVentas  DetalleVenta[]
+}
+
+model Venta {
+  id         Int             @id @default(autoincrement())
+  fecha      DateTime        @default(now())
+  total      Decimal         @db.Decimal(10, 2)
+  usuarioId  Int
+  usuario    Usuario         @relation(fields: [usuarioId], references: [id])
+  detalles   DetalleVenta[]
+}
+
+model DetalleVenta {
+  id         Int      @id @default(autoincrement())
+  ventaId    Int
+  venta      Venta    @relation(fields: [ventaId], references: [id])
+  productoId Int
+  producto   Producto @relation(fields: [productoId], references: [id])
+  cantidad   Int
+  subtotal   Decimal  @db.Decimal(10, 2)
+}
+
+model Gasto {
+  id          Int       @id @default(autoincrement())
+  tipo        TipoGasto
+  descripcion String
+  monto       Decimal   @db.Decimal(10, 2)
+  fecha       DateTime  @default(now())
+}
