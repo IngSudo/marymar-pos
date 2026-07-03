@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: marymar_db
+    environment:
+      POSTGRES_USER: marymar
+      POSTGRES_PASSWORD: marymar123
+      POSTGRES_DB: marymar_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
