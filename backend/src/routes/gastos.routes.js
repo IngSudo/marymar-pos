@@ -5,16 +5,19 @@ const { verificarToken, soloAdmin } = require('../middleware/auth');
 const router = express.Router();
 
 router.post('/', verificarToken, soloAdmin, async (req, res) => {
-  const { tipo, descripcion, monto, fecha } = req.body;
-  const gasto = await prisma.gasto.create({
-    data: {
-      tipo, 
-      descripcion,
-      monto,
-      fecha: fecha ? new Date(fecha) : undefined,
-    },
-  });
-  res.json(gasto);
+  const { descripcion, monto, fecha } = req.body;
+  try {
+    const gasto = await prisma.gasto.create({
+      data: {
+        descripcion,
+        monto,
+        fecha: fecha ? new Date(fecha) : undefined,
+      },
+    });
+    res.json(gasto);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 router.get('/', verificarToken, soloAdmin, async (req, res) => {

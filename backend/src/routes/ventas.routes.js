@@ -1,14 +1,16 @@
-const express = require('express');
-const prisma = require('../prismaClient');
-const { verificarToken } = require('../middleware/auth');
+const express = require("express");
+const prisma = require("../prismaClient");
+const { verificarToken } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.post('/', verificarToken, async (req, res) => {
+router.post("/", verificarToken, async (req, res) => {
   const { items } = req.body;
 
   if (!items || items.length === 0) {
-    return res.status(400).json({ error: 'La venta debe tener al menos un producto' });
+    return res
+      .status(400)
+      .json({ error: "La venta debe tener al menos un producto" });
   }
 
   try {
@@ -45,7 +47,7 @@ router.post('/', verificarToken, async (req, res) => {
   }
 });
 
-router.get('/', verificarToken, async (req, res) => {
+router.get("/", verificarToken, async (req, res) => {
   const { desde, hasta } = req.query;
   const where = {};
   if (desde || hasta) {
@@ -57,7 +59,7 @@ router.get('/', verificarToken, async (req, res) => {
   const ventas = await prisma.venta.findMany({
     where,
     include: { detalles: { include: { producto: true } }, usuario: true },
-    orderBy: { fecha: 'desc' },
+    orderBy: { fecha: "desc" },
   });
   res.json(ventas);
 });

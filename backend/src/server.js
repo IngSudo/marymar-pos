@@ -7,6 +7,7 @@ const productosRoutes = require('./routes/productos.routes');
 const ventasRoutes = require('./routes/ventas.routes');
 const gastosRoutes = require('./routes/gastos.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
+const costosRecurrentesRoutes = require('./routes/costosRecurrentes.routes');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use('/api/productos', productosRoutes);
 app.use('/api/ventas', ventasRoutes);
 app.use('/api/gastos', gastosRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/costos-recurrentes', costosRecurrentesRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });

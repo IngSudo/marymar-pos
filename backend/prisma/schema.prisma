@@ -12,9 +12,14 @@ enum Rol {
   CAJERO
 }
 
-enum TipoGasto {
-  FIJO
-  VARIABLE
+enum Frecuencia {
+  DIARIO
+  MENSUAL
+}
+
+enum TipoCostoRecurrente {
+  SUELDO
+  OPERATIVO
 }
 
 model Usuario {
@@ -34,23 +39,23 @@ model Categoria {
 }
 
 model Producto {
-  id             Int             @id @default(autoincrement())
-  nombre         String
-  precio         Decimal         @db.Decimal(10, 2)
-  costoEstimado  Decimal?        @db.Decimal(10, 2)
-  activo         Boolean         @default(true)
-  categoriaId    Int
-  categoria      Categoria       @relation(fields: [categoriaId], references: [id])
-  detalleVentas  DetalleVenta[]
+  id            Int            @id @default(autoincrement())
+  nombre        String
+  precio        Decimal        @db.Decimal(10, 2)
+  costoEstimado Decimal?       @db.Decimal(10, 2)
+  activo        Boolean        @default(true)
+  categoriaId   Int
+  categoria     Categoria      @relation(fields: [categoriaId], references: [id])
+  detalleVentas DetalleVenta[]
 }
 
 model Venta {
-  id         Int             @id @default(autoincrement())
-  fecha      DateTime        @default(now())
-  total      Decimal         @db.Decimal(10, 2)
-  usuarioId  Int
-  usuario    Usuario         @relation(fields: [usuarioId], references: [id])
-  detalles   DetalleVenta[]
+  id        Int            @id @default(autoincrement())
+  fecha     DateTime       @default(now())
+  total     Decimal        @db.Decimal(10, 2)
+  usuarioId Int
+  usuario   Usuario        @relation(fields: [usuarioId], references: [id])
+  detalles  DetalleVenta[]
 }
 
 model DetalleVenta {
@@ -64,9 +69,18 @@ model DetalleVenta {
 }
 
 model Gasto {
-  id          Int       @id @default(autoincrement())
-  tipo        TipoGasto
+  id          Int      @id @default(autoincrement())
   descripcion String
-  monto       Decimal   @db.Decimal(10, 2)
-  fecha       DateTime  @default(now())
+  monto       Decimal  @db.Decimal(10, 2)
+  fecha       DateTime @default(now())
+}
+
+model CostoRecurrente {
+  id          Int                 @id @default(autoincrement())
+  descripcion String
+  monto       Decimal             @db.Decimal(10, 2)
+  frecuencia  Frecuencia
+  tipo        TipoCostoRecurrente
+  activo      Boolean             @default(true)
+  createdAt   DateTime            @default(now())
 }
