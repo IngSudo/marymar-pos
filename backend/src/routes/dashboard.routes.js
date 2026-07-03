@@ -4,6 +4,14 @@ const { verificarToken, soloAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
+function formatFecha(fecha) {
+  const d = new Date(fecha);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 function inicioDelDia(fecha) {
   const d = new Date(fecha);
   d.setHours(0, 0, 0, 0);
@@ -31,14 +39,6 @@ router.get("/resumen", verificarToken, soloAdmin, async (req, res) => {
   const gastos = await prisma.gasto.findMany({
     where: { fecha: { gte: desde, lte: hasta } },
   });
-
-  function formatFecha(fecha) {
-    const d = new Date(fecha);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
 
   const numeroDias =
     Math.round(
@@ -99,6 +99,56 @@ router.get("/resumen", verificarToken, soloAdmin, async (req, res) => {
     ticketPromedio: Number(ticketPromedio.toFixed(2)),
     numeroVentas: ventas.length,
     topPlatos,
+  });
+});
+
+router.get('/rentabilidad', verificarToken, soloAdmin, async (req, res) => {
+  const desde = req.query.desde ? inicioDelDia(req.query.desde) : inicioDelDia(new Date());
+  const hasta = req.query.hasta ? finDelDia(req.query.hasta) : finDelDia(new Date());
+
+  const productos = await prisma.producto.findMany({
+    where: { activo: true },
+    include: {
+      detalleVentas: {
+        where: { venta: { fecha: { gte: desde, lte: hasta } } },
+      },
+    },
+  });
+
+  const rentabilidad = productos.map((p) => {
+    const precio = Number(p.precio);
+    const costo = p.costoEstimado ? Number(p.costoEstimado) : null;
+
+    const margenUnitario = costo !== null ? precio - costo : null;
+    const margenPorcentual = costo !== null && precio > 0
+      ? Number(((margenUnitario / precio) * 100).toFixed(2))
+      : null;
+
+    const unidadesVendidas = p.detalleVentas.reduce((sum, d) => sum + d.cantidad, 0);
+    const ingresoGenerado = p.detalleVentas.reduce((sum, d) => sum + Number(d.subtotal), 0);
+    const gananciaGenerada = costo !== null
+      ? Number((margenUnitario * unidadesVendidas).toFixed(2))
+      : null;
+
+    return {
+      productoId: p.id,
+      nombre: p.nombre,
+      precio,
+      costoEstimado: costo,
+      margenUnitario,
+      margenPorcentual,
+      unidadesVendidas,
+      ingresoGenerado: Number(ingresoGenerado.toFixed(2)),
+      gananciaGenerada,
+    };
+  });
+
+  rentabilidad.sort((a, b) => (b.gananciaGenerada ?? 0) - (a.gananciaGenerada ?? 0));
+
+  res.json({
+    desde: formatFecha(desde),
+    hasta: formatFecha(hasta),
+    productos: rentabilidad,
   });
 });
 
