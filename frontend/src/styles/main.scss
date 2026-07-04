@@ -1,0 +1,22 @@
+@use 'variables' as *;
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: $font-base;
+  font-size: $font-size-base;
+  background: $color-bg;
+  color: $color-text;
+}
+
+input, select {
+  font-family: inherit;
+  font-size: inherit;
+}

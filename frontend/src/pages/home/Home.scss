@@ -1,0 +1,32 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.home {
+  padding: $spacing-lg;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+  }
+
+  &__rol {
+    color: $color-text-muted;
+    font-size: 0.85rem;
+  }
+
+  &__logout {
+    @include button-base;
+    background: $color-danger;
+    color: $color-white;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &__mensaje {
+    color: $color-text-muted;
+  }
+}
