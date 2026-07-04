@@ -59,4 +59,18 @@ router.post("/registrar", verificarToken, soloAdmin, async (req, res) => {
   }
 });
 
+router.get('/usuarios', verificarToken, soloAdmin, async (req, res) => {
+  const usuarios = await prisma.usuario.findMany({
+    select: {
+      id: true,
+      nombre: true,
+      usuario: true,
+      rol: true,
+      createdAt: true,
+    },
+    orderBy: { nombre: 'asc' },
+  });
+  res.json(usuarios);
+});
+
 module.exports = router;
