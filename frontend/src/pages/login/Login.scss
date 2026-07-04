@@ -2,69 +2,76 @@
 @use '../../styles/mixins' as *;
 
 .login {
-  @include flex-center;
-  height: 100vh;
-  padding: $spacing-md;
+    @include flex-center;
+    height: 100vh;
+    padding: $spacing-md;
 
-  &__card {
-    @include card;
-    width: 100%;
-    max-width: 360px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__title {
-    margin: 0 0 $spacing-xs;
-    color: $color-primary-dark;
-    font-size: 1.6rem;
-    text-align: center;
-  }
-
-  &__subtitle {
-    margin: 0 0 $spacing-lg;
-    color: $color-text-muted;
-    text-align: center;
-    font-size: 0.9rem;
-  }
-
-  &__error {
-    background: rgba($color-danger, 0.1);
-    color: $color-danger;
-    border-radius: $radius-sm;
-    padding: $spacing-sm;
-    margin-bottom: $spacing-md;
-    font-size: 0.85rem;
-    text-align: center;
-  }
-
-  &__label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: $spacing-xs;
-    color: $color-text;
-  }
-
-  &__input {
-    border: 1px solid $color-border;
-    border-radius: $radius-sm;
-    padding: $spacing-sm;
-    margin-bottom: $spacing-md;
-
-    &:focus {
-      outline: none;
-      border-color: $color-primary;
+    &__card {
+        @include card;
+        width: 100%;
+        max-width: 360px;
+        display: flex;
+        flex-direction: column;
     }
-  }
 
-  &__submit {
-    @include button-base;
-    background: $color-primary;
-    color: $color-white;
-    margin-top: $spacing-sm;
-
-    &:hover:not(:disabled) {
-      background: $color-primary-dark;
+    &__title {
+        margin: 0 0 $spacing-xs;
+        color: $color-primary-dark;
+        font-size: 1.6rem;
+        text-align: center;
     }
-  }
+
+    &__subtitle {
+        margin: 0 0 $spacing-lg;
+        color: $color-text-muted;
+        text-align: center;
+        font-size: 0.9rem;
+
+        &--slogan {
+            color: $color-text-muted;
+            text-align: center;
+            font-size: 0.9rem;
+            margin: 0 0 10px;
+        }
+    }
+
+    &__error {
+        background: rgba($color-danger, 0.1);
+        color: $color-danger;
+        border-radius: $radius-sm;
+        padding: $spacing-sm;
+        margin-bottom: $spacing-md;
+        font-size: 0.85rem;
+        text-align: center;
+    }
+
+    &__label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: $spacing-xs;
+        color: $color-text;
+    }
+
+    &__input {
+        border: 1px solid $color-border;
+        border-radius: $radius-sm;
+        padding: $spacing-sm;
+        margin-bottom: $spacing-md;
+
+        &:focus {
+            outline: none;
+            border-color: $color-primary;
+        }
+    }
+
+    &__submit {
+        @include button-base;
+        background: $color-primary;
+        color: $color-white;
+        margin-top: $spacing-sm;
+
+        &:hover:not(:disabled) {
+            background: $color-primary-dark;
+        }
+    }
 }

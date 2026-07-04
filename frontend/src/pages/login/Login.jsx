@@ -30,7 +30,8 @@ export default function Login() {
   return (
     <div className="login">
       <form className="login__card" onSubmit={handleSubmit}>
-        <h1 className="login__title">MaryMar POS</h1>
+        <h1 className="login__title">Restaurante MaryMar</h1>
+        <p className='login__subtitle--slogan'>Las Delicias del Mar</p>
         <p className="login__subtitle">Inicia sesion para continuar</p>
 
         {error && <div className="login__error">{error}</div>}
