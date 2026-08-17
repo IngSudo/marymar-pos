@@ -34,3 +34,8 @@ export async function generarSesionDispositivo(id) {
   const { data } = await client.post(`/auth/usuarios/${id}/sesion-dispositivo`);
   return data;
 }
+
+export async function cambiarPassword(passwordActual, passwordNueva) {
+  const { data } = await client.put('/auth/cambiar-password', { passwordActual, passwordNueva });
+  return data;
+}

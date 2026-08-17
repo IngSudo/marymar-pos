@@ -1,0 +1,86 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.configuracion {
+  &__card {
+    @include card;
+    display: flex;
+    gap: $spacing-md;
+    max-width: 640px;
+  }
+
+  &__icono {
+    @include flex-center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: $radius-md;
+    background: $color-primary-light;
+    color: $color-primary-dark;
+  }
+
+  &__texto {
+    flex: 1;
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: $font-size-md;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      color: $color-text-muted;
+      font-size: $font-size-sm;
+      line-height: 1.5;
+    }
+  }
+
+  &__form {
+    display: flex;
+    gap: $spacing-sm;
+    align-items: center;
+    margin-top: $spacing-md;
+    flex-wrap: wrap;
+  }
+
+  &__select-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+
+    select {
+      @include input-base;
+      padding-left: 34px;
+    }
+  }
+
+  &__select-icono {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color-text-muted;
+    pointer-events: none;
+  }
+
+  &__mensaje {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: $spacing-md;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-sm;
+    font-size: $font-size-sm;
+
+    &--ok {
+      background: $color-primary-light;
+      color: $color-primary-dark;
+    }
+
+    &--error {
+      background: $color-danger-light;
+      color: $color-danger;
+    }
+  }
+}

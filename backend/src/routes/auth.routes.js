@@ -63,6 +63,32 @@ router.post("/registrar", verificarToken, soloAdmin, async (req, res) => {
   }
 });
 
+router.put('/cambiar-password', verificarToken, async (req, res) => {
+  const { passwordActual, passwordNueva } = req.body;
+  if (!passwordActual || !passwordNueva) {
+    return res.status(400).json({ error: 'Debes indicar la contraseña actual y la nueva' });
+  }
+  if (passwordNueva.length < 4) {
+    return res.status(400).json({ error: 'La nueva contraseña debe tener al menos 4 caracteres' });
+  }
+
+  try {
+    const user = await prisma.usuario.findUnique({ where: { id: req.usuario.id } });
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    const passwordValida = await bcrypt.compare(passwordActual, user.password);
+    if (!passwordValida) {
+      return res.status(401).json({ error: 'La contraseña actual no es correcta' });
+    }
+
+    const passwordHash = await bcrypt.hash(passwordNueva, 10);
+    await prisma.usuario.update({ where: { id: user.id }, data: { password: passwordHash } });
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: 'No se pudo cambiar la contraseña' });
+  }
+});
+
 router.get('/usuarios', verificarToken, soloAdmin, async (req, res) => {
   const usuarios = await prisma.usuario.findMany({
     select: {
@@ -77,6 +103,25 @@ router.get('/usuarios', verificarToken, soloAdmin, async (req, res) => {
     orderBy: { nombre: 'asc' },
   });
   res.json(usuarios);
+});
+
+router.put('/usuarios/:id', verificarToken, soloAdmin, async (req, res) => {
+  const { nombre, usuario, rol, password } = req.body;
+  const data = { nombre, usuario, rol };
+  if (password) {
+    data.password = await bcrypt.hash(password, 10);
+  }
+
+  try {
+    const actualizado = await prisma.usuario.update({
+      where: { id: Number(req.params.id) },
+      data,
+      select: { id: true, nombre: true, usuario: true, rol: true, activo: true, createdAt: true, fechaDesactivacion: true },
+    });
+    res.json(actualizado);
+  } catch (err) {
+    res.status(400).json({ error: 'No se pudo actualizar el usuario (¿usuario ya existe?)' });
+  }
 });
 
 router.patch('/usuarios/:id/desactivar', verificarToken, soloAdmin, async (req, res) => {
@@ -122,7 +167,7 @@ router.post('/usuarios/:id/sesion-dispositivo', verificarToken, soloAdmin, async
     const token = jwt.sign(
       { id: user.id, rol: user.rol, nombre: user.nombre },
       process.env.JWT_SECRET,
-      { expiresIn: '180d' } // sesión larga, pensada para no expirar en el uso diario
+      { expiresIn: '180d' }
     );
 
     res.json({ token, usuario: { id: user.id, nombre: user.nombre, rol: user.rol } });
