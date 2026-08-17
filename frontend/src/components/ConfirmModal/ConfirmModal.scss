@@ -2,9 +2,25 @@
 @use '../../styles/mixins' as *;
 
 .confirm-modal {
+  &__icono {
+    @include flex-center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: $spacing-md;
+    border-radius: $radius-full;
+    background: $color-secondary-light;
+    color: $color-secondary;
+
+    &--peligro {
+      background: $color-danger-light;
+      color: $color-danger;
+    }
+  }
+
   p {
-    margin-bottom: $spacing-lg;
+    margin: 0 0 $spacing-lg;
     color: $color-text;
+    line-height: 1.5;
   }
 
   &__acciones {
@@ -28,7 +44,7 @@
 
     &--peligro {
       background: $color-danger;
-      &:hover { opacity: 0.9; }
+      &:hover { background: #b93a3a; }
     }
   }
 }

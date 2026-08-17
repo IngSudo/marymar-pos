@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Plus, Pencil, Trash2, Power, PowerOff, X, Soup, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { obtenerProductos, desactivarProducto, activarProducto, eliminarProducto } from '../../api/productos';
 import { obtenerCategorias, eliminarCategoria } from '../../api/categorias';
-import Modal from '../../components/Modal/Modal';
+import Modal from '../../components/modal/Modal';
+import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import FormularioProducto from '../../components/FormularioProducto/FormularioProducto';
 import '../../styles/_admin.scss';
 
@@ -16,9 +18,16 @@ export default function Menu() {
   const [modalAbierta, setModalAbierta] = useState(false);
   const [productoEditando, setProductoEditando] = useState(null);
   const [error, setError] = useState('');
+  const [productoAEliminar, setProductoAEliminar] = useState(null);
+  const [categoriaAEliminar, setCategoriaAEliminar] = useState(null);
 
   const [filtroCategoria, setFiltroCategoria] = useState('');
   const [orden, setOrden] = useState('nombre');
+  const [ordenEstado, setOrdenEstado] = useState('ninguno');
+
+  function cicloOrdenEstado() {
+    setOrdenEstado((prev) => (prev === 'ninguno' ? 'activos' : prev === 'activos' ? 'inactivos' : 'ninguno'));
+  }
 
   useEffect(() => { cargar(); }, []);
 
@@ -42,25 +51,27 @@ export default function Menu() {
     cargar();
   }
 
-  async function handleEliminarProducto(producto) {
-    if (!confirm(`¿Eliminar "${producto.nombre}" permanentemente?`)) return;
+  async function confirmarEliminarProducto() {
     setError('');
     try {
-      await eliminarProducto(producto.id);
+      await eliminarProducto(productoAEliminar.id);
       cargar();
     } catch (err) {
       setError(err.response?.data?.error || 'No se pudo eliminar');
+    } finally {
+      setProductoAEliminar(null);
     }
   }
 
-  async function handleEliminarCategoria(categoria) {
-    if (!confirm(`¿Eliminar la categoría "${categoria.nombre}"?`)) return;
+  async function confirmarEliminarCategoria() {
     setError('');
     try {
-      await eliminarCategoria(categoria.id);
+      await eliminarCategoria(categoriaAEliminar.id);
       cargar();
     } catch (err) {
       setError(err.response?.data?.error || 'No se pudo eliminar la categoría');
+    } finally {
+      setCategoriaAEliminar(null);
     }
   }
 
@@ -74,17 +85,27 @@ export default function Menu() {
     } else {
       lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
     }
+    if (ordenEstado === 'activos') {
+      lista.sort((a, b) => Number(b.activo) - Number(a.activo));
+    } else if (ordenEstado === 'inactivos') {
+      lista.sort((a, b) => Number(a.activo) - Number(b.activo));
+    }
     return lista;
-  }, [productos, filtroCategoria, orden]);
+  }, [productos, filtroCategoria, orden, ordenEstado]);
 
   return (
     <div className="admin-page">
       <div className="admin-page__header">
         <h1>Menú</h1>
-        {esAdmin && <button className="admin-page__agregar" onClick={abrirCrear}>+ Agregar plato</button>}
+        {esAdmin && (
+          <button className="admin-page__agregar" onClick={abrirCrear}>
+            <Plus size={16} strokeWidth={2.5} />
+            Agregar plato
+          </button>
+        )}
       </div>
 
-      {error && <p style={{ color: '#c0392b', marginBottom: '1rem' }}>{error}</p>}
+      {error && <p className="admin-page__error">{error}</p>}
 
       <div className="admin-page__filtros">
         <select value={filtroCategoria} onChange={(e) => setFiltroCategoria(e.target.value)}>
@@ -109,13 +130,29 @@ export default function Menu() {
               <tr>
                 <th>Plato</th><th>Categoría</th><th>Precio</th>
                 {esAdmin && <th>Costo</th>}
-                <th>Estado</th>
+                <th
+                  className="admin-page__th-ordenable"
+                  onClick={cicloOrdenEstado}
+                  title="Clic para ordenar por estado"
+                >
+                  <span>
+                    Estado
+                    {ordenEstado === 'activos' && <ArrowUp size={12} strokeWidth={2.5} />}
+                    {ordenEstado === 'inactivos' && <ArrowDown size={12} strokeWidth={2.5} />}
+                    {ordenEstado === 'ninguno' && <ArrowUpDown size={12} strokeWidth={2} />}
+                  </span>
+                </th>
                 {esAdmin && <th>Acciones</th>}
               </tr>
             </thead>
             <tbody>
               {productosFiltrados.length === 0 && (
-                <tr><td colSpan={esAdmin ? 6 : 4} className="admin-page__vacio">No hay platos que coincidan con el filtro</td></tr>
+                <tr>
+                  <td colSpan={esAdmin ? 6 : 4} className="admin-page__vacio">
+                    <Soup size={22} strokeWidth={1.5} style={{ display: 'block', margin: '0 auto 8px', opacity: 0.5 }} />
+                    No hay platos que coincidan con el filtro
+                  </td>
+                </tr>
               )}
               {productosFiltrados.map((p) => (
                 <tr key={p.id}>
@@ -130,11 +167,20 @@ export default function Menu() {
                   </td>
                   {esAdmin && (
                     <td className="admin-page__acciones">
-                      <button className="editar" onClick={() => abrirEditar(p)}>Editar</button>
-                      <button className={p.activo ? 'desactivar' : 'activar'} onClick={() => handleToggle(p)}>
-                        {p.activo ? 'Desactivar' : 'Activar'}
+                      <button className="editar" onClick={() => abrirEditar(p)} title="Editar" aria-label="Editar">
+                        <Pencil size={15} strokeWidth={2} />
                       </button>
-                      <button className="desactivar" onClick={() => handleEliminarProducto(p)}>Eliminar</button>
+                      <button
+                        className={p.activo ? 'desactivar' : 'activar'}
+                        onClick={() => handleToggle(p)}
+                        title={p.activo ? 'Desactivar' : 'Activar'}
+                        aria-label={p.activo ? 'Desactivar' : 'Activar'}
+                      >
+                        {p.activo ? <PowerOff size={15} strokeWidth={2} /> : <Power size={15} strokeWidth={2} />}
+                      </button>
+                      <button className="desactivar" onClick={() => setProductoAEliminar(p)} title="Eliminar" aria-label="Eliminar">
+                        <Trash2 size={15} strokeWidth={2} />
+                      </button>
                     </td>
                   )}
                 </tr>
@@ -151,7 +197,9 @@ export default function Menu() {
             {categorias.map((c) => (
               <span key={c.id} className="admin-page__categoria-chip">
                 {c.nombre}
-                <button onClick={() => handleEliminarCategoria(c)} title="Eliminar categoría">✕</button>
+                <button onClick={() => setCategoriaAEliminar(c)} title="Eliminar categoría" aria-label="Eliminar categoría">
+                  <X size={12} strokeWidth={2.5} />
+                </button>
               </span>
             ))}
           </div>
@@ -162,6 +210,24 @@ export default function Menu() {
         <Modal titulo={productoEditando ? 'Editar plato' : 'Agregar plato'} onClose={() => setModalAbierta(false)}>
           <FormularioProducto productoExistente={productoEditando} onGuardado={handleGuardado} />
         </Modal>
+      )}
+
+      {productoAEliminar && (
+        <ConfirmModal
+          titulo="Eliminar plato"
+          mensaje={`¿Eliminar "${productoAEliminar.nombre}" permanentemente? Esta acción no se puede deshacer.`}
+          onConfirmar={confirmarEliminarProducto}
+          onCancelar={() => setProductoAEliminar(null)}
+        />
+      )}
+
+      {categoriaAEliminar && (
+        <ConfirmModal
+          titulo="Eliminar categoría"
+          mensaje={`¿Eliminar la categoría "${categoriaAEliminar.nombre}"? Esta acción no se puede deshacer.`}
+          onConfirmar={confirmarEliminarCategoria}
+          onCancelar={() => setCategoriaAEliminar(null)}
+        />
       )}
     </div>
   );

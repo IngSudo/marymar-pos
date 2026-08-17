@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Pencil, Trash2, Check, X, StickyNote, Send } from 'lucide-react';
 import { obtenerNotas, crearNota, editarNota, eliminarNota } from '../../api/notas';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import './Notas.scss';
@@ -50,8 +51,8 @@ export default function Notas() {
 
   return (
     <div className="notas">
-      <h1>Notas</h1>
-      <p className="notas__subtitulo">Registro de notas - cosas sucedidas en el dia o pagos pendientes</p>
+      <h1><StickyNote size={22} strokeWidth={2} /> Notas</h1>
+      <p className="notas__subtitulo">Registro de notas — cosas sucedidas en el día o pagos pendientes</p>
 
       <form className="notas__form" onSubmit={handleCrear}>
         <textarea
@@ -60,13 +61,21 @@ export default function Notas() {
           placeholder="Escribe una nota nueva..."
           rows={3}
         />
-        <button type="submit">Agregar nota</button>
+        <button type="submit">
+          <Send size={15} strokeWidth={2} />
+          Agregar nota
+        </button>
       </form>
 
       {cargando && <p className="notas__cargando">Cargando...</p>}
 
       <div className="notas__lista">
-        {!cargando && notas.length === 0 && <p className="notas__vacio">No hay notas todavía.</p>}
+        {!cargando && notas.length === 0 && (
+          <p className="notas__vacio">
+            <StickyNote size={22} strokeWidth={1.5} style={{ display: 'block', margin: '0 auto 8px', opacity: 0.5 }} />
+            No hay notas todavía.
+          </p>
+        )}
 
         {notas.map((n) => (
           <div key={n.id} className="notas__item">
@@ -76,10 +85,17 @@ export default function Notas() {
                   value={textoEdicion}
                   onChange={(e) => setTextoEdicion(e.target.value)}
                   rows={3}
+                  autoFocus
                 />
                 <div className="notas__item-acciones">
-                  <button onClick={() => guardarEdicion(n.id)}>Guardar</button>
-                  <button onClick={() => setEditandoId(null)}>Cancelar</button>
+                  <button onClick={() => guardarEdicion(n.id)}>
+                    <Check size={14} strokeWidth={2.5} />
+                    Guardar
+                  </button>
+                  <button className="notas__accion--muted" onClick={() => setEditandoId(null)}>
+                    <X size={14} strokeWidth={2.5} />
+                    Cancelar
+                  </button>
                 </div>
               </>
             ) : (
@@ -88,8 +104,14 @@ export default function Notas() {
                 <div className="notas__meta">
                   <span>{n.creadoPor} · {new Date(n.createdAt).toLocaleString('es-EC')}</span>
                   <div className="notas__item-acciones">
-                    <button onClick={() => empezarEdicion(n)}>Editar</button>
-                    <button onClick={() => setAEliminar(n)}>Eliminar</button>
+                    <button onClick={() => empezarEdicion(n)}>
+                      <Pencil size={13} strokeWidth={2} />
+                      Editar
+                    </button>
+                    <button className="notas__accion--peligro" onClick={() => setAEliminar(n)}>
+                      <Trash2 size={13} strokeWidth={2} />
+                      Eliminar
+                    </button>
                   </div>
                 </div>
               </>

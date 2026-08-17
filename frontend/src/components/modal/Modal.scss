@@ -4,17 +4,22 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(24, 20, 17, 0.5);
+  backdrop-filter: blur(2px);
   @include flex-center;
-  z-index: 1000;
+  z-index: $z-modal;
+  padding: $spacing-md;
+  animation: modal-overlay-in $transition-base;
 }
 
 .modal {
   @include card;
+  box-shadow: $shadow-lg;
   width: 100%;
   max-width: 420px;
   max-height: 85vh;
   overflow-y: auto;
+  animation: modal-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 
   &__header {
     display: flex;
@@ -29,14 +34,27 @@
   }
 
   &__cerrar {
-    border: none;
-    background: transparent;
-    font-size: 1.1rem;
-    cursor: pointer;
-    color: $color-text-muted;
+    @include icon-button;
 
     &:hover {
+      background: $color-bg;
       color: $color-text;
     }
+  }
+}
+
+@keyframes modal-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }

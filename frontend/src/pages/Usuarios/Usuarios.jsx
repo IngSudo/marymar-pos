@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { Plus, Pencil, Trash2, Power, PowerOff, Users as UsersIcon } from "lucide-react";
 import {
   obtenerUsuarios,
   desactivarUsuario,
   activarUsuario,
   eliminarUsuario,
 } from "../../api/usuarios";
-import Modal from "../../components/Modal/Modal";
+import Modal from "../../components/modal/Modal";
+import ConfirmModal from "../../components/ConfirmModal/ConfirmModal";
 import FormularioUsuario from "../../components/FormularioUsuario/FormularioUsuario";
 import "../../styles/_admin.scss";
 
@@ -14,8 +16,8 @@ export default function Usuarios() {
   const [cargando, setCargando] = useState(true);
   const [modalAbierta, setModalAbierta] = useState(false);
   const [editando, setEditando] = useState(null);
-  const [error, setError] = useState("");
   const [aEliminar, setAEliminar] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     cargar();
@@ -42,9 +44,6 @@ export default function Usuarios() {
     setModalAbierta(false);
     cargar();
   }
-  function pedirEliminar(u) {
-    setAEliminar(u);
-  }
 
   async function handleToggle(u) {
     if (u.activo) await desactivarUsuario(u.id);
@@ -53,6 +52,7 @@ export default function Usuarios() {
   }
 
   async function confirmarEliminar() {
+    setError("");
     try {
       await eliminarUsuario(aEliminar.id);
       setAEliminar(null);
@@ -68,13 +68,12 @@ export default function Usuarios() {
       <div className="admin-page__header">
         <h1>Usuarios</h1>
         <button className="admin-page__agregar" onClick={abrirCrear}>
-          + Crear usuario
+          <Plus size={16} strokeWidth={2.5} />
+          Crear usuario
         </button>
       </div>
 
-      {error && (
-        <p style={{ color: "#c0392b", marginBottom: "1rem" }}>{error}</p>
-      )}
+      {error && <p className="admin-page__error">{error}</p>}
       {cargando && <p className="admin-page__cargando">Cargando...</p>}
 
       {!cargando && (
@@ -95,6 +94,7 @@ export default function Usuarios() {
               {usuarios.length === 0 && (
                 <tr>
                   <td colSpan={7} className="admin-page__vacio">
+                    <UsersIcon size={22} strokeWidth={1.5} style={{ display: "block", margin: "0 auto 8px", opacity: 0.5 }} />
                     No hay usuarios
                   </td>
                 </tr>
@@ -120,20 +120,24 @@ export default function Usuarios() {
                       : "—"}
                   </td>
                   <td className="admin-page__acciones">
-                    <button className="editar" onClick={() => abrirEditar(u)}>
-                      Editar
+                    <button className="editar" onClick={() => abrirEditar(u)} title="Editar" aria-label="Editar">
+                      <Pencil size={15} strokeWidth={2} />
                     </button>
                     <button
                       className={u.activo ? "desactivar" : "activar"}
                       onClick={() => handleToggle(u)}
+                      title={u.activo ? "Desactivar" : "Activar"}
+                      aria-label={u.activo ? "Desactivar" : "Activar"}
                     >
-                      {u.activo ? "Desactivar" : "Activar"}
+                      {u.activo ? <PowerOff size={15} strokeWidth={2} /> : <Power size={15} strokeWidth={2} />}
                     </button>
                     <button
                       className="desactivar"
-                      onClick={() => pedirEliminar(u)}
+                      onClick={() => setAEliminar(u)}
+                      title="Eliminar"
+                      aria-label="Eliminar"
                     >
-                      Eliminar
+                      <Trash2 size={15} strokeWidth={2} />
                     </button>
                   </td>
                 </tr>
@@ -157,8 +161,8 @@ export default function Usuarios() {
 
       {aEliminar && (
         <ConfirmModal
-          titulo="Confirmar eliminación"
-          mensaje={`¿Eliminar "${aEliminar.nombre || aEliminar.descripcion}" permanentemente? Esta acción no se puede deshacer.`}
+          titulo="Eliminar usuario"
+          mensaje={`¿Eliminar a "${aEliminar.nombre}" permanentemente? Esta acción no se puede deshacer.`}
           onConfirmar={confirmarEliminar}
           onCancelar={() => setAEliminar(null)}
         />

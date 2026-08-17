@@ -3,10 +3,12 @@
 .main-layout {
   display: flex;
   min-height: 100vh;
+  background: $color-bg;
 
   &__content {
     flex: 1;
-    padding: $spacing-lg;
+    padding: $spacing-xl;
     overflow-y: auto;
+    min-width: 0;
   }
 }

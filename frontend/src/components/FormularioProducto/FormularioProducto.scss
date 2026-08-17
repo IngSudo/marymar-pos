@@ -6,21 +6,21 @@
   flex-direction: column;
 
   label {
-    font-size: 0.8rem;
+    font-size: $font-size-xs;
     font-weight: 600;
-    margin-bottom: $spacing-xs;
-    margin-top: $spacing-sm;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+    margin-top: $spacing-md;
+
+    &:first-of-type {
+      margin-top: 0;
+    }
   }
 
   input, select {
-    border: 1px solid $color-border;
-    border-radius: $radius-sm;
-    padding: $spacing-sm;
-
-    &:focus {
-      outline: none;
-      border-color: $color-primary;
-    }
+    @include input-base;
   }
 
   button {
@@ -28,6 +28,7 @@
     background: $color-primary;
     color: $color-white;
     margin-top: $spacing-lg;
+    box-shadow: $shadow-sm;
 
     &:hover:not(:disabled) {
       background: $color-primary-dark;
@@ -35,11 +36,13 @@
   }
 
   &__error {
-    background: rgba($color-danger, 0.1);
-    color: $color-danger;
+    @include badge($color-danger, $color-danger-light);
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    padding: $spacing-sm $spacing-md;
     border-radius: $radius-sm;
-    padding: $spacing-sm;
-    font-size: 0.85rem;
+    font-size: $font-size-sm;
     margin-bottom: $spacing-sm;
   }
 }

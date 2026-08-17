@@ -9,7 +9,8 @@
     margin-bottom: $spacing-lg;
 
     h1 {
-      color: $color-primary-dark;
+      color: $color-text;
+      font-size: $font-size-xl;
       margin: 0;
     }
   }
@@ -18,10 +19,22 @@
     @include button-base;
     background: $color-primary;
     color: $color-white;
+    box-shadow: $shadow-sm;
 
     &:hover {
       background: $color-primary-dark;
     }
+  }
+
+  &__error {
+    @include badge($color-danger, $color-danger-light);
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-sm;
+    font-size: $font-size-sm;
+    margin-bottom: $spacing-md;
   }
 
   &__tabla {
@@ -39,80 +52,90 @@
       text-align: left;
       padding: $spacing-sm $spacing-md;
       border-bottom: 1px solid $color-border;
-      font-size: 0.9rem;
+      font-size: $font-size-sm;
     }
 
     th {
       color: $color-text-muted;
-      font-size: 0.75rem;
+      font-size: $font-size-xs;
+      font-weight: 600;
       text-transform: uppercase;
+      letter-spacing: 0.03em;
+      background: $color-bg;
     }
 
-    tr:last-child td {
-      border-bottom: none;
+    th.admin-page__th-ordenable {
+      cursor: pointer;
+      user-select: none;
+      transition: color $transition-fast;
+
+      span {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      &:hover {
+        color: $color-primary-dark;
+      }
+    }
+
+    tbody tr {
+      transition: background $transition-fast;
+
+      &:hover {
+        background: rgba($color-primary, 0.03);
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
     }
   }
 
   &__acciones {
     display: flex;
-    gap: $spacing-sm;
+    gap: 4px;
 
     button {
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      font-size: 0.8rem;
-      padding: $spacing-xs $spacing-sm;
-      border-radius: $radius-sm;
+      @include icon-button;
 
-      &.editar {
+      &.editar:hover {
+        background: $color-primary-light;
         color: $color-primary-dark;
-
-        &:hover {
-          background: rgba($color-primary, 0.1);
-        }
       }
 
-      &.desactivar {
+      &.desactivar:hover {
+        background: $color-danger-light;
         color: $color-danger;
-
-        &:hover {
-          background: rgba($color-danger, 0.08);
-        }
       }
 
-      &.activar {
+      &.activar:hover {
+        background: $color-secondary-light;
         color: $color-secondary;
-
-        &:hover {
-          background: rgba($color-secondary, 0.08);
-        }
       }
     }
   }
 
   &__badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    @include badge($color-text-muted, $color-bg);
 
     &--activo {
-      background: rgba($color-secondary, 0.12);
       color: $color-secondary;
+      background: $color-secondary-light;
     }
 
     &--inactivo {
-      background: rgba($color-text-muted, 0.15);
       color: $color-text-muted;
+      background: $color-bg;
     }
   }
 
   &__vacio {
     color: $color-text-muted;
-    padding: $spacing-lg;
+    padding: $spacing-xl;
     text-align: center;
+    font-size: $font-size-sm;
   }
 
   &__cargando {
@@ -125,11 +148,10 @@
     margin-bottom: $spacing-md;
 
     select {
-      border: 1px solid $color-border;
-      border-radius: $radius-sm;
+      @include input-base;
+      width: auto;
       padding: $spacing-xs $spacing-sm;
-      font-size: 0.85rem;
-      background: $color-white;
+      font-size: $font-size-sm;
     }
   }
 
@@ -137,9 +159,10 @@
     margin-top: $spacing-xl;
 
     h2 {
-      font-size: 0.95rem;
+      font-size: $font-size-md;
+      font-weight: 600;
       margin-bottom: $spacing-sm;
-      color: $color-text-muted;
+      color: $color-text;
     }
   }
 
@@ -152,21 +175,25 @@
   &__categoria-chip {
     display: inline-flex;
     align-items: center;
-    gap: $spacing-xs;
-    background: $color-white;
+    gap: 6px;
+    background: $color-surface;
     border: 1px solid $color-border;
-    border-radius: 999px;
-    padding: $spacing-xs $spacing-sm;
-    font-size: 0.8rem;
+    border-radius: $radius-full;
+    padding: 6px $spacing-sm 6px $spacing-md;
+    font-size: $font-size-sm;
 
     button {
+      @include flex-center;
+      width: 18px;
+      height: 18px;
       border: none;
+      border-radius: $radius-full;
       background: transparent;
       cursor: pointer;
       color: $color-text-muted;
-      font-size: 0.75rem;
 
       &:hover {
+        background: $color-danger-light;
         color: $color-danger;
       }
     }
