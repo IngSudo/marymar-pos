@@ -1,0 +1,93 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.gastos__filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.gastos__filtro-tipo {
+  display: flex;
+  gap: $spacing-xs;
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: 2px;
+
+  button {
+    border: none;
+    background: transparent;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $radius-sm;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: $color-text-muted;
+
+    &.activo {
+      background: $color-primary;
+      color: $color-white;
+    }
+  }
+}
+
+.gastos__filtro-extra {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: 6px $spacing-sm;
+  color: $color-text-muted;
+  font-size: 0.8rem;
+
+  span { color: $color-text-muted; }
+
+  input {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.8rem;
+    color: $color-text;
+
+    &:focus { outline: none; }
+  }
+}
+
+.gastos__total {
+  @include card;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-lg;
+
+  &-icono {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-md;
+    background: $color-primary-light;
+    color: $color-primary-dark;
+    flex-shrink: 0;
+  }
+
+  &-label {
+    display: block;
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  &-valor {
+    display: block;
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-text;
+  }
+}
