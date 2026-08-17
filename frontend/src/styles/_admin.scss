@@ -1,0 +1,174 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.admin-page {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+
+    h1 {
+      color: $color-primary-dark;
+      margin: 0;
+    }
+  }
+
+  &__agregar {
+    @include button-base;
+    background: $color-primary;
+    color: $color-white;
+
+    &:hover {
+      background: $color-primary-dark;
+    }
+  }
+
+  &__tabla {
+    @include card;
+    padding: 0;
+    overflow: hidden;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: $spacing-sm $spacing-md;
+      border-bottom: 1px solid $color-border;
+      font-size: 0.9rem;
+    }
+
+    th {
+      color: $color-text-muted;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  &__acciones {
+    display: flex;
+    gap: $spacing-sm;
+
+    button {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-sm;
+
+      &.editar {
+        color: $color-primary-dark;
+
+        &:hover {
+          background: rgba($color-primary, 0.1);
+        }
+      }
+
+      &.desactivar {
+        color: $color-danger;
+
+        &:hover {
+          background: rgba($color-danger, 0.08);
+        }
+      }
+
+      &.activar {
+        color: $color-secondary;
+
+        &:hover {
+          background: rgba($color-secondary, 0.08);
+        }
+      }
+    }
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    &--activo {
+      background: rgba($color-secondary, 0.12);
+      color: $color-secondary;
+    }
+
+    &--inactivo {
+      background: rgba($color-text-muted, 0.15);
+      color: $color-text-muted;
+    }
+  }
+
+  &__vacio {
+    color: $color-text-muted;
+    padding: $spacing-lg;
+    text-align: center;
+  }
+
+  &__cargando {
+    color: $color-text-muted;
+  }
+
+  &__filtros {
+    display: flex;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+
+    select {
+      border: 1px solid $color-border;
+      border-radius: $radius-sm;
+      padding: $spacing-xs $spacing-sm;
+      font-size: 0.85rem;
+      background: $color-white;
+    }
+  }
+
+  &__seccion-categorias {
+    margin-top: $spacing-xl;
+
+    h2 {
+      font-size: 0.95rem;
+      margin-bottom: $spacing-sm;
+      color: $color-text-muted;
+    }
+  }
+
+  &__categorias-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+  }
+
+  &__categoria-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-xs;
+    background: $color-white;
+    border: 1px solid $color-border;
+    border-radius: 999px;
+    padding: $spacing-xs $spacing-sm;
+    font-size: 0.8rem;
+
+    button {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: $color-text-muted;
+      font-size: 0.75rem;
+
+      &:hover {
+        color: $color-danger;
+      }
+    }
+  }
+}

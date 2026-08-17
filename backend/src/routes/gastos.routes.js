@@ -1,10 +1,11 @@
 const express = require('express');
 const prisma = require('../prismaClient');
-const { verificarToken, soloAdmin } = require('../middleware/auth');
+const { verificarToken } = require('../middleware/auth');
+const { inicioDelDia, finDelDia } = require('../utils/fechas');
 
 const router = express.Router();
 
-router.post('/', verificarToken, soloAdmin, async (req, res) => {
+router.post('/', verificarToken, async (req, res) => {
   const { descripcion, monto, fecha } = req.body;
   try {
     const gasto = await prisma.gasto.create({
@@ -20,13 +21,13 @@ router.post('/', verificarToken, soloAdmin, async (req, res) => {
   }
 });
 
-router.get('/', verificarToken, soloAdmin, async (req, res) => {
+router.get('/', verificarToken, async (req, res) => {
   const { desde, hasta } = req.query;
   const where = {};
   if (desde || hasta) {
     where.fecha = {};
-    if (desde) where.fecha.gte = new Date(desde);
-    if (hasta) where.fecha.lte = new Date(hasta);
+    if (desde) where.fecha.gte = inicioDelDia(desde);
+    if (hasta) where.fecha.lte = finDelDia(hasta);
   }
 
   const gastos = await prisma.gasto.findMany({ where, orderBy: { fecha: 'desc' } });

@@ -23,13 +23,15 @@ enum TipoCostoRecurrente {
 }
 
 model Usuario {
-  id        Int      @id @default(autoincrement())
-  nombre    String
-  usuario   String   @unique
-  password  String
-  rol       Rol
-  createdAt DateTime @default(now())
-  ventas    Venta[]
+  id                 Int       @id @default(autoincrement())
+  nombre             String
+  usuario            String    @unique
+  password           String
+  rol                Rol
+  activo             Boolean   @default(true)
+  fechaDesactivacion DateTime?
+  createdAt          DateTime  @default(now())
+  ventas             Venta[]
 }
 
 model Categoria {
@@ -44,6 +46,7 @@ model Producto {
   precio        Decimal        @db.Decimal(10, 2)
   costoEstimado Decimal?       @db.Decimal(10, 2)
   activo        Boolean        @default(true)
+  createdAt     DateTime       @default(now())
   categoriaId   Int
   categoria     Categoria      @relation(fields: [categoriaId], references: [id])
   detalleVentas DetalleVenta[]
@@ -83,4 +86,12 @@ model CostoRecurrente {
   tipo        TipoCostoRecurrente
   activo      Boolean             @default(true)
   createdAt   DateTime            @default(now())
+}
+
+model Nota {
+  id          Int      @id @default(autoincrement())
+  contenido   String
+  creadoPor   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

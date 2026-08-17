@@ -1,0 +1,57 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.dashboard {
+  &__selector {
+    display: flex;
+    gap: $spacing-xs;
+    background: $color-white;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    padding: 2px;
+
+    button {
+      border: none;
+      background: transparent;
+      padding: $spacing-xs $spacing-md;
+      border-radius: $radius-sm;
+      cursor: pointer;
+      font-size: 0.85rem;
+
+      &.activo { background: $color-primary; color: $color-white; }
+    }
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__card {
+    @include card;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+
+    &.positivo .dashboard__valor { color: $color-secondary; }
+    &.negativo .dashboard__valor { color: $color-danger; }
+  }
+
+  &__label { font-size: 0.8rem; color: $color-text-muted; }
+  &__valor { font-size: 1.6rem; font-weight: 700; }
+  &__detalle { font-size: 0.7rem; color: $color-text-muted; }
+
+  &__delta {
+    font-size: 0.75rem;
+    font-weight: 600;
+    &.positivo { color: $color-secondary; }
+    &.negativo { color: $color-danger; }
+  }
+
+  &__seccion {
+    margin-bottom: $spacing-xl;
+    h2 { font-size: 1rem; margin-bottom: $spacing-sm; }
+  }
+}

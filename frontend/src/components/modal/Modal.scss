@@ -1,0 +1,42 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  @include flex-center;
+  z-index: 1000;
+}
+
+.modal {
+  @include card;
+  width: 100%;
+  max-width: 420px;
+  max-height: 85vh;
+  overflow-y: auto;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-md;
+
+    h2 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+  }
+
+  &__cerrar {
+    border: none;
+    background: transparent;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: $color-text-muted;
+
+    &:hover {
+      color: $color-text;
+    }
+  }
+}

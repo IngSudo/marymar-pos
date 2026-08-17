@@ -67,4 +67,14 @@ router.patch('/:id/activar', verificarToken, soloAdmin, async (req, res) => {
   res.json(costo);
 });
 
+router.delete('/:id', verificarToken, soloAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await prisma.costoRecurrente.delete({ where: { id: Number(id) } });
+    res.json({ eliminado: true });
+  } catch (err) {
+    res.status(400).json({ error: 'No se pudo eliminar' });
+  }
+});
+
 module.exports = router;

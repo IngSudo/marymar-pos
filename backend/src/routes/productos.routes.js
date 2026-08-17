@@ -12,7 +12,7 @@ router.get("/", verificarToken, async (req, res) => {
   res.json(productos);
 });
 
-router.post("/", verificarToken, soloAdmin, async (req, res) => {
+router.post("/", verificarToken, async (req, res) => {
   const { nombre, precio, costoEstimado, categoriaId } = req.body;
   const producto = await prisma.producto.create({
     data: { nombre, precio, costoEstimado, categoriaId },
@@ -20,7 +20,7 @@ router.post("/", verificarToken, soloAdmin, async (req, res) => {
   res.json(producto);
 });
 
-router.put("/:id", verificarToken, soloAdmin, async (req, res) => {
+router.put("/:id", verificarToken, async (req, res) => {
   const { id } = req.params;
   const { nombre, precio, costoEstimado, categoriaId, activo } = req.body;
   const producto = await prisma.producto.update({
@@ -30,13 +30,36 @@ router.put("/:id", verificarToken, soloAdmin, async (req, res) => {
   res.json(producto);
 });
 
-router.patch("/:id/desactivar", verificarToken, soloAdmin, async (req, res) => {
+router.patch("/:id/desactivar", verificarToken, async (req, res) => {
   const { id } = req.params;
   const producto = await prisma.producto.update({
     where: { id: Number(id) },
     data: { activo: false },
   });
   res.json(producto);
+});
+
+router.patch('/:id/activar', verificarToken, async (req, res) => {
+  const { id } = req.params;
+  const producto = await prisma.producto.update({
+    where: { id: Number(id) },
+    data: { activo: true },
+  });
+  res.json(producto);
+});
+
+router.delete('/:id', verificarToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const tieneVentas = await prisma.detalleVenta.findFirst({ where: { productoId: Number(id) } });
+    if (tieneVentas) {
+      return res.status(400).json({ error: 'No se puede eliminar: tiene ventas registradas. Desactívalo en su lugar.' });
+    }
+    await prisma.producto.delete({ where: { id: Number(id) } });
+    res.json({ eliminado: true });
+  } catch (err) {
+    res.status(400).json({ error: 'No se pudo eliminar el producto' });
+  }
 });
 
 module.exports = router;

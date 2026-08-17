@@ -1,0 +1,45 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.form-producto {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: $spacing-xs;
+    margin-top: $spacing-sm;
+  }
+
+  input, select {
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    padding: $spacing-sm;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+    }
+  }
+
+  button {
+    @include button-base;
+    background: $color-primary;
+    color: $color-white;
+    margin-top: $spacing-lg;
+
+    &:hover:not(:disabled) {
+      background: $color-primary-dark;
+    }
+  }
+
+  &__error {
+    background: rgba($color-danger, 0.1);
+    color: $color-danger;
+    border-radius: $radius-sm;
+    padding: $spacing-sm;
+    font-size: 0.85rem;
+    margin-bottom: $spacing-sm;
+  }
+}

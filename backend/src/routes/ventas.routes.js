@@ -1,6 +1,7 @@
 const express = require("express");
 const prisma = require("../prismaClient");
 const { verificarToken } = require("../middleware/auth");
+const { inicioDelDia, finDelDia } = require('../utils/fechas');
 
 const router = express.Router();
 
@@ -52,8 +53,8 @@ router.get("/", verificarToken, async (req, res) => {
   const where = {};
   if (desde || hasta) {
     where.fecha = {};
-    if (desde) where.fecha.gte = new Date(desde);
-    if (hasta) where.fecha.lte = new Date(hasta);
+    if (desde) where.fecha.gte = inicioDelDia(desde);
+    if (hasta) where.fecha.lte = finDelDia(hasta);
   }
 
   const ventas = await prisma.venta.findMany({

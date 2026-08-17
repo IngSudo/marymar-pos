@@ -1,0 +1,178 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.pos {
+  display: flex;
+  gap: $spacing-lg;
+  align-items: flex-start;
+
+  &__productos {
+    flex: 1;
+
+    h1 {
+      color: $color-primary-dark;
+      margin-bottom: $spacing-md;
+    }
+  }
+
+  &__cargando {
+    color: $color-text-muted;
+  }
+
+  &__categoria {
+    margin-bottom: $spacing-lg;
+
+    h2 {
+      font-size: 1rem;
+      color: $color-text-muted;
+      margin-bottom: $spacing-sm;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: $spacing-sm;
+  }
+
+  &__producto {
+    @include card;
+    padding: $spacing-md;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-xs;
+    cursor: pointer;
+    border: 1px solid $color-border;
+    transition: border-color 0.15s ease, transform 0.1s ease;
+
+    &:hover {
+      border-color: $color-primary;
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+
+  &__producto-nombre {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  &__producto-precio {
+    color: $color-primary-dark;
+    font-weight: 700;
+  }
+
+  &__carrito {
+    @include card;
+    width: 320px;
+    position: sticky;
+    top: $spacing-lg;
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+  }
+
+  &__carrito-vacio {
+    color: $color-text-muted;
+    font-size: 0.85rem;
+  }
+
+  &__carrito-items {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    max-height: 320px;
+    overflow-y: auto;
+    margin-bottom: $spacing-md;
+  }
+
+  &__item {
+    border-bottom: 1px solid $color-border;
+    padding-bottom: $spacing-sm;
+  }
+
+  &__item-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__item-subtotal {
+    font-weight: 600;
+  }
+
+  &__item-controles {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    button {
+      border: 1px solid $color-border;
+      background: $color-white;
+      border-radius: $radius-sm;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+      font-size: 0.9rem;
+
+      &:hover {
+        background: $color-bg;
+      }
+    }
+  }
+
+  &__item-quitar {
+    margin-left: auto;
+    color: $color-danger;
+    border-color: transparent !important;
+  }
+
+  &__total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: $spacing-md 0;
+    border-top: 2px solid $color-border;
+  }
+
+  &__mensaje {
+    padding: $spacing-sm;
+    border-radius: $radius-sm;
+    font-size: 0.85rem;
+    margin-bottom: $spacing-sm;
+    text-align: center;
+
+    &--ok {
+      background: rgba($color-secondary, 0.12);
+      color: $color-secondary;
+    }
+
+    &--error {
+      background: rgba($color-danger, 0.1);
+      color: $color-danger;
+    }
+  }
+
+  &__confirmar {
+    @include button-base;
+    background: $color-secondary;
+    color: $color-white;
+    font-size: 1rem;
+    padding: $spacing-md;
+
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+  }
+}

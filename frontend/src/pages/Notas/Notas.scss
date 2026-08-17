@@ -1,0 +1,81 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.notas {
+  h1 { color: $color-primary-dark; margin-bottom: $spacing-xs; }
+
+  &__subtitulo { color: $color-text-muted; margin-bottom: $spacing-lg; font-size: 0.85rem; }
+
+  &__form {
+    @include card;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-lg;
+
+    textarea {
+      border: 1px solid $color-border;
+      border-radius: $radius-sm;
+      padding: $spacing-sm;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    button {
+      @include button-base;
+      background: $color-primary;
+      color: $color-white;
+      align-self: flex-end;
+      &:hover { background: $color-primary-dark; }
+    }
+  }
+
+  &__cargando, &__vacio { color: $color-text-muted; }
+
+  &__lista {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__item {
+    @include card;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+
+    textarea {
+      border: 1px solid $color-border;
+      border-radius: $radius-sm;
+      padding: $spacing-sm;
+      font-family: inherit;
+    }
+  }
+
+  &__contenido {
+    margin: 0;
+    white-space: pre-wrap;
+  }
+
+  &__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: $color-text-muted;
+  }
+
+  &__item-acciones {
+    display: flex;
+    gap: $spacing-sm;
+
+    button {
+      border: none;
+      background: transparent;
+      color: $color-primary-dark;
+      cursor: pointer;
+      font-size: 0.8rem;
+      &:hover { text-decoration: underline; }
+    }
+  }
+}

@@ -2,31 +2,111 @@
 @use '../../styles/mixins' as *;
 
 .home {
-  padding: $spacing-lg;
-
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  h1 {
+    color: $color-primary-dark;
     margin-bottom: $spacing-lg;
   }
 
-  &__rol {
-    color: $color-text-muted;
-    font-size: 0.85rem;
+  &__resumen {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
   }
 
-  &__logout {
-    @include button-base;
-    background: $color-danger;
-    color: $color-white;
+  &__card {
+    @include card;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
 
-    &:hover {
-      opacity: 0.9;
+    &--positivo &-valor {
+      color: $color-secondary;
+    }
+
+    &--negativo &-valor {
+      color: $color-danger;
     }
   }
 
-  &__mensaje {
+  &__card-label {
+    font-size: 0.8rem;
     color: $color-text-muted;
+  }
+
+  &__card-valor {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  &__menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-md;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+
+    h2 {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+  }
+
+  &__menu-controles {
+    display: flex;
+    gap: $spacing-sm;
+    align-items: center;
+
+    select {
+      border: 1px solid $color-border;
+      border-radius: $radius-sm;
+      padding: $spacing-xs $spacing-sm;
+      font-size: 0.85rem;
+      background: $color-white;
+    }
+  }
+
+  &__agregar {
+    @include button-base;
+    background: $color-primary;
+    color: $color-white;
+
+    &:hover {
+      background: $color-primary-dark;
+    }
+  }
+
+  &__cargando,
+  &__vacio {
+    color: $color-text-muted;
+  }
+
+  &__menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: $spacing-sm;
+  }
+
+  &__plato {
+    @include card;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__plato-nombre {
+    font-weight: 600;
+  }
+
+  &__plato-categoria {
+    font-size: 0.75rem;
+    color: $color-text-muted;
+    text-transform: uppercase;
+  }
+
+  &__plato-precio {
+    color: $color-primary-dark;
+    font-weight: 700;
   }
 }
