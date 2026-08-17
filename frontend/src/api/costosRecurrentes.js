@@ -24,3 +24,8 @@ export async function activarCostoRecurrente(id) {
   const { data } = await client.patch(`/costos-recurrentes/${id}/activar`);
   return data;
 }
+
+export async function obtenerPendientes() {
+  const { data } = await client.get('/costos-recurrentes/pendientes');
+  return data;
+}

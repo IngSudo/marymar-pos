@@ -1,0 +1,425 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.costos {
+  &__pago-panel {
+    @include card;
+    margin-top: $spacing-xl;
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      font-size: $font-size-lg;
+      margin: 0 0 $spacing-md;
+    }
+  }
+
+  &__pago-form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    max-width: 520px;
+  }
+
+  &__pago-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    span {
+      font-size: $font-size-xs;
+      font-weight: 600;
+      color: $color-text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    select {
+      @include input-base;
+    }
+  }
+
+  &__pendiente-actual {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+    flex-wrap: wrap;
+
+    strong {
+      color: $color-warning;
+    }
+  }
+
+  &__pago-periodo {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__dias-ledger {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__dias-detalle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding: $spacing-sm;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+  }
+
+  &__dia {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 9px;
+    border: none;
+    border-radius: $radius-sm;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+    cursor: pointer;
+    transition: filter $transition-fast;
+
+    &:hover:not(:disabled) {
+      filter: brightness(0.95);
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+
+    &--pendiente {
+      background: $color-primary-light;
+      color: $color-primary-dark;
+    }
+
+    &--extra-pendiente {
+      background: $color-warning-light;
+      color: $color-warning;
+      border: 1px dashed $color-warning;
+    }
+
+    &--invalido {
+      background: $color-danger-light;
+      color: $color-danger;
+      text-decoration: line-through;
+    }
+
+    &--pagado {
+      background: $color-primary;
+      color: $color-white;
+      opacity: 0.85;
+    }
+
+    &--no-aplica {
+      background: $color-bg;
+      color: $color-text-muted;
+      opacity: 0.6;
+    }
+  }
+
+  &__dias-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      font-style: normal;
+    }
+  }
+}
+
+.costos__pago-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+
+  button {
+    border: 1px solid $color-border;
+    background: $color-white;
+    color: $color-text-muted;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px $spacing-sm;
+    border-radius: $radius-sm;
+    cursor: pointer;
+
+    &.activo {
+      background: $color-primary;
+      border-color: $color-primary;
+      color: $color-white;
+    }
+
+    &:hover:not(.activo) {
+      border-color: $color-primary;
+    }
+  }
+}
+
+.costos__pago-rango {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: 6px $spacing-sm;
+  color: $color-text-muted;
+  font-size: 0.8rem;
+  width: fit-content;
+
+  span { color: $color-text-muted; }
+
+  input {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.8rem;
+    color: $color-text;
+
+    &:focus { outline: none; }
+  }
+}
+
+.costos {
+  &__pago-preview {
+    background: $color-primary-light;
+    color: $color-primary-dark;
+    border-radius: $radius-sm;
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-size-sm;
+  }
+
+  &__pago-ok {
+    color: $color-primary-dark;
+    font-size: $font-size-sm;
+    margin: 0;
+  }
+
+  &__pago-error {
+    color: $color-danger;
+    font-size: $font-size-sm;
+    margin: 0;
+  }
+
+  &__pago-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+  }
+
+  &__pago-boton {
+    @include button-base;
+    background: $color-primary;
+    color: $color-white;
+    box-shadow: $shadow-sm;
+
+    &:hover:not(:disabled) {
+      background: $color-primary-dark;
+    }
+  }
+
+  &__pago-boton-completo {
+    @include button-base;
+    background: $color-white;
+    border: 1px solid $color-primary;
+    color: $color-primary-dark;
+
+    &:hover:not(:disabled) {
+      background: $color-primary-light;
+    }
+  }
+
+  &__detalle-pago {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__detalle-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: $spacing-md;
+    font-size: $font-size-sm;
+    border-bottom: 1px solid $color-border;
+    padding-bottom: $spacing-xs;
+
+    span {
+      color: $color-text-muted;
+    }
+
+    strong {
+      text-align: right;
+    }
+  }
+
+  &__detalle-dias {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+    margin-top: $spacing-xs;
+
+    > span {
+      font-size: $font-size-xs;
+      font-weight: 600;
+      color: $color-text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+  }
+
+  &__dias-invalidos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__dia-invalido-fila {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-xs;
+    background: $color-danger-light;
+    border-radius: $radius-sm;
+  }
+
+  &__pago-eliminar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    align-self: flex-start;
+    margin-top: $spacing-sm;
+    border: 1px solid $color-danger;
+    background: $color-white;
+    color: $color-danger;
+    font-family: inherit;
+    font-size: $font-size-sm;
+    font-weight: 600;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $radius-sm;
+    cursor: pointer;
+
+    &:hover {
+      background: $color-danger-light;
+    }
+  }
+
+  &__dia-invalido-nota {
+    font-size: $font-size-sm;
+    color: $color-text;
+  }
+
+  &__pagos-seccion {
+    margin-top: $spacing-xl;
+  }
+
+  &__pagos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      font-size: $font-size-lg;
+      margin: 0;
+    }
+  }
+
+  &__pagos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: $spacing-md;
+  }
+
+  &__pago-card {
+    position: relative;
+    @include card;
+    padding: $spacing-md;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    overflow: hidden;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    cursor: pointer;
+    transition: box-shadow $transition-fast, transform $transition-fast;
+
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: translateY(-1px);
+    }
+
+    strong {
+      font-size: 0.95rem;
+      padding-right: $spacing-md;
+    }
+  }
+
+  &__pago-sello {
+    position: absolute;
+    top: 10px;
+    right: -28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 32px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: $color-white;
+    background: $color-primary;
+    transform: rotate(35deg);
+    box-shadow: $shadow-sm;
+  }
+
+  &__pago-periodo-texto {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+  }
+
+  &__pago-monto {
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-primary-dark;
+    margin: $spacing-xs 0;
+  }
+
+  &__pago-meta {
+    font-size: 11px;
+    color: $color-text-muted;
+    border-top: 1px dashed $color-border;
+    padding-top: $spacing-xs;
+  }
+}
