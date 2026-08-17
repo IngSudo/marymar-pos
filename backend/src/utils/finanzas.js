@@ -1,3 +1,9 @@
+function montoProrateado(costo, numeroDias) {
+  if (costo.frecuencia === 'DIARIO') return Number(costo.monto) * numeroDias;
+  if (costo.frecuencia === 'MENSUAL') return (Number(costo.monto) / 30) * numeroDias;
+  return 0;
+}
+
 async function calcularResumenRango(prisma, { desde, hasta, numeroDias }) {
   const ventas = await prisma.venta.findMany({
     where: { fecha: { gte: desde, lte: hasta } },
@@ -10,14 +16,8 @@ async function calcularResumenRango(prisma, { desde, hasta, numeroDias }) {
 
   const costosRecurrentes = await prisma.costoRecurrente.findMany({ where: { activo: true } });
 
-  function calcularEnRango(costo) {
-    if (costo.frecuencia === 'DIARIO') return Number(costo.monto) * numeroDias;
-    if (costo.frecuencia === 'MENSUAL') return (Number(costo.monto) / 30) * numeroDias;
-    return 0;
-  }
-
-  const sueldos = costosRecurrentes.filter((c) => c.tipo === 'SUELDO').reduce((s, c) => s + calcularEnRango(c), 0);
-  const costosOperativos = costosRecurrentes.filter((c) => c.tipo === 'OPERATIVO').reduce((s, c) => s + calcularEnRango(c), 0);
+  const sueldos = costosRecurrentes.filter((c) => c.tipo === 'SUELDO').reduce((s, c) => s + montoProrateado(c, numeroDias), 0);
+  const costosOperativos = costosRecurrentes.filter((c) => c.tipo === 'OPERATIVO').reduce((s, c) => s + montoProrateado(c, numeroDias), 0);
   const gastosVariables = gastos.reduce((s, g) => s + Number(g.monto), 0);
   const costosRecurrentesTotal = sueldos + costosOperativos;
   const costos = gastosVariables + costosRecurrentesTotal;
@@ -52,4 +52,4 @@ async function calcularResumenRango(prisma, { desde, hasta, numeroDias }) {
   };
 }
 
-module.exports = { calcularResumenRango };
+module.exports = { calcularResumenRango, montoProrateado };

@@ -22,16 +22,23 @@ enum TipoCostoRecurrente {
   OPERATIVO
 }
 
+enum EstadoDia {
+  EXTRA_PENDIENTE
+  INVALIDO
+  PAGADO
+}
+
 model Usuario {
-  id                 Int       @id @default(autoincrement())
+  id                 Int                    @id @default(autoincrement())
   nombre             String
-  usuario            String    @unique
+  usuario            String                 @unique
   password           String
   rol                Rol
-  activo             Boolean   @default(true)
+  activo             Boolean                @default(true)
   fechaDesactivacion DateTime?
-  createdAt          DateTime  @default(now())
+  createdAt          DateTime               @default(now())
   ventas             Venta[]
+  pagosRegistrados   PagoCostoRecurrente[]
 }
 
 model Categoria {
@@ -79,13 +86,42 @@ model Gasto {
 }
 
 model CostoRecurrente {
-  id          Int                 @id @default(autoincrement())
+  id          Int                    @id @default(autoincrement())
   descripcion String
-  monto       Decimal             @db.Decimal(10, 2)
+  monto       Decimal                @db.Decimal(10, 2)
   frecuencia  Frecuencia
   tipo        TipoCostoRecurrente
-  activo      Boolean             @default(true)
-  createdAt   DateTime            @default(now())
+  activo      Boolean                @default(true)
+  createdAt   DateTime               @default(now())
+  pagos       PagoCostoRecurrente[]
+  dias        DiaCostoRecurrente[]
+}
+
+model PagoCostoRecurrente {
+  id                Int                  @id @default(autoincrement())
+  costoRecurrenteId Int
+  costoRecurrente   CostoRecurrente      @relation(fields: [costoRecurrenteId], references: [id])
+  periodoDesde      DateTime
+  periodoHasta      DateTime
+  monto             Decimal              @db.Decimal(10, 2)
+  fechaPago         DateTime             @default(now())
+  registradoPorId   Int
+  registradoPor     Usuario              @relation(fields: [registradoPorId], references: [id])
+  dias              DiaCostoRecurrente[]
+}
+
+model DiaCostoRecurrente {
+  id                Int                  @id @default(autoincrement())
+  costoRecurrenteId Int
+  costoRecurrente   CostoRecurrente      @relation(fields: [costoRecurrenteId], references: [id])
+  fecha             DateTime             @db.Date
+  estado            EstadoDia
+  nota              String?
+  pagoId            Int?
+  pago              PagoCostoRecurrente? @relation(fields: [pagoId], references: [id])
+  createdAt         DateTime             @default(now())
+
+  @@unique([costoRecurrenteId, fecha])
 }
 
 model Nota {

@@ -8,6 +8,8 @@ const ventasRoutes = require('./routes/ventas.routes');
 const gastosRoutes = require('./routes/gastos.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
 const costosRecurrentesRoutes = require('./routes/costosRecurrentes.routes');
+const pagosCostosRecurrentesRoutes = require('./routes/pagosCostosRecurrentes.routes');
+const diasCostoRecurrenteRoutes = require('./routes/diasCostoRecurrente.routes');
 const categoriasRoutes = require('./routes/categorias.routes');
 const notasRoutes = require('./routes/notas.routes');
 
@@ -23,6 +25,8 @@ app.use('/api/ventas', ventasRoutes);
 app.use('/api/gastos', gastosRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/costos-recurrentes', costosRecurrentesRoutes);
+app.use('/api/pagos-costos-recurrentes', pagosCostosRecurrentesRoutes);
+app.use('/api/dias-costo-recurrente', diasCostoRecurrenteRoutes);
 app.use('/api/categorias', categoriasRoutes);
 app.use('/api/notas', notasRoutes);
 

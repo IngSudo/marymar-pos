@@ -18,6 +18,10 @@ function finDelDia(fecha) {
   return d;
 }
 
+function diasEntre(desde, hasta) {
+  return Math.round((inicioDelDia(hasta) - inicioDelDia(desde)) / 86400000) + 1;
+}
+
 function formatFecha(fecha) {
   const d = new Date(fecha);
   const year = d.getFullYear();
@@ -26,4 +30,12 @@ function formatFecha(fecha) {
   return `${year}-${month}-${day}`;
 }
 
-module.exports = { inicioDelDia, finDelDia, formatFecha };
+function formatFechaUTC(fecha) {
+  const d = new Date(fecha);
+  const year = d.getUTCFullYear();
+  const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+module.exports = { inicioDelDia, finDelDia, formatFecha, formatFechaUTC, diasEntre };

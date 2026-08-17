@@ -1,6 +1,7 @@
 const express = require('express');
 const prisma = require('../prismaClient');
 const { verificarToken, soloAdmin } = require('../middleware/auth');
+const { calcularPendiente } = require('../utils/pendientes');
 
 const router = express.Router();
 
@@ -9,6 +10,17 @@ router.get('/', verificarToken, soloAdmin, async (req, res) => {
     orderBy: { descripcion: 'asc' },
   });
   res.json(costos);
+});
+
+router.get('/pendientes', verificarToken, soloAdmin, async (req, res) => {
+  const costos = await prisma.costoRecurrente.findMany({ where: { activo: true } });
+
+  const resultado = await Promise.all(costos.map(async (c) => {
+    const r = await calcularPendiente(prisma, c);
+    return { costoRecurrenteId: c.id, ...r };
+  }));
+
+  res.json(resultado);
 });
 
 router.post('/', verificarToken, soloAdmin, async (req, res) => {
