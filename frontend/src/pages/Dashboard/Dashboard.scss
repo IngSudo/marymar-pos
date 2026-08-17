@@ -2,6 +2,14 @@
 @use '../../styles/mixins' as *;
 
 .dashboard {
+  &__filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+  }
+
   &__selector {
     display: flex;
     gap: $spacing-xs;
@@ -19,6 +27,37 @@
       font-size: 0.85rem;
 
       &.activo { background: $color-primary; color: $color-white; }
+    }
+  }
+
+  &__filtro-extra {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: $color-white;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    padding: 6px $spacing-sm;
+    color: $color-text-muted;
+    font-size: 0.8rem;
+
+    span { color: $color-text-muted; }
+
+    input {
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.8rem;
+      color: $color-text;
+      padding: 0;
+
+      &:focus { outline: none; }
+    }
+
+    &--activo {
+      border-color: $color-primary;
+      color: $color-primary-dark;
+      background: $color-primary-light;
     }
   }
 
@@ -40,10 +79,13 @@
   }
 
   &__label { font-size: 0.8rem; color: $color-text-muted; }
-  &__valor { font-size: 1.6rem; font-weight: 700; }
+  &__valor { display: flex; align-items: center; gap: 6px; font-size: 1.6rem; font-weight: 700; }
   &__detalle { font-size: 0.7rem; color: $color-text-muted; }
 
   &__delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     font-size: 0.75rem;
     font-weight: 600;
     &.positivo { color: $color-secondary; }
@@ -52,6 +94,29 @@
 
   &__seccion {
     margin-bottom: $spacing-xl;
-    h2 { font-size: 1rem; margin-bottom: $spacing-sm; }
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 1rem;
+      margin-bottom: $spacing-sm;
+    }
+  }
+
+  &__comparativas {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: $spacing-md;
+    align-items: stretch;
+
+    @media (max-width: 760px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__comparativa {
+    @include card;
+    margin-bottom: 0;
   }
 }
