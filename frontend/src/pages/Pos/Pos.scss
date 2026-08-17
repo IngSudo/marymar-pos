@@ -6,84 +6,436 @@
   gap: $spacing-lg;
   align-items: flex-start;
 
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
+
   &__productos {
     flex: 1;
+    min-width: 0;
+  }
+
+  &__toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
 
     h1 {
-      color: $color-primary-dark;
-      margin-bottom: $spacing-md;
+      color: $color-text;
+      font-size: $font-size-xl;
+      margin: 0;
     }
   }
 
-  &__cargando {
+  &__buscador {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-full;
+    padding: 8px 14px;
+    width: 240px;
     color: $color-text-muted;
+
+    input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: $font-size-sm;
+      color: $color-text;
+      width: 100%;
+
+      &::placeholder {
+        color: $color-text-muted;
+      }
+    }
   }
 
-  &__categoria {
-    margin-bottom: $spacing-lg;
+  &__tabs {
+    display: flex;
+    gap: $spacing-xs;
+    overflow-x: auto;
+    padding-bottom: $spacing-sm;
+    margin-bottom: $spacing-md;
+    scrollbar-width: thin;
+  }
 
-    h2 {
-      font-size: 1rem;
-      color: $color-text-muted;
-      margin-bottom: $spacing-sm;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
+  &__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    border: 1px solid $color-border;
+    background: $color-surface;
+    color: $color-text-muted;
+    font-size: $font-size-sm;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: $radius-full;
+    cursor: pointer;
+    transition: background $transition-fast, color $transition-fast, border-color $transition-fast;
+
+    &:hover {
+      border-color: $color-primary;
+      color: $color-text;
     }
+
+    &--activa {
+      background: $color-primary;
+      border-color: $color-primary;
+      color: $color-white;
+
+      &:hover {
+        color: $color-white;
+      }
+    }
+  }
+
+  &__cargando,
+  &__sin-resultados {
+    color: $color-text-muted;
+    font-size: $font-size-sm;
   }
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: $spacing-sm;
   }
 
   &__producto {
+    position: relative;
     @include card;
     padding: $spacing-md;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: $spacing-xs;
+    gap: 2px;
     cursor: pointer;
-    border: 1px solid $color-border;
-    transition: border-color 0.15s ease, transform 0.1s ease;
+    text-align: left;
+    font-family: inherit;
+    transition: border-color $transition-fast, transform $transition-fast, box-shadow $transition-fast;
 
     &:hover {
       border-color: $color-primary;
+      box-shadow: $shadow-md;
     }
 
     &:active {
       transform: scale(0.97);
     }
+
+    &--agregado {
+      border-color: $color-primary;
+      background: $color-primary-light;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-primary;
+      outline-offset: 2px;
+    }
+  }
+
+  &__producto-categoria {
+    font-size: 10px;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 600;
   }
 
   &__producto-nombre {
     font-weight: 600;
     font-size: 0.9rem;
+    margin: 2px 0 6px;
   }
 
   &__producto-precio {
     color: $color-primary-dark;
     font-weight: 700;
+    font-size: $font-size-lg;
+  }
+
+  &__producto-agregar {
+    @include flex-center;
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+    width: 22px;
+    height: 22px;
+    border-radius: $radius-full;
+    background: $color-primary-light;
+    color: $color-primary-dark;
+  }
+
+  &__pedidos {
+    margin-top: $spacing-xl;
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      font-size: $font-size-lg;
+      margin: 0;
+    }
+  }
+
+  &__pedidos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+  }
+
+  &__pedidos-filtro {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+
+    > button {
+      border: 1px solid $color-border;
+      background: $color-white;
+      color: $color-text-muted;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px $spacing-sm;
+      border-radius: $radius-sm;
+      cursor: pointer;
+
+      &.activo {
+        background: $color-primary;
+        border-color: $color-primary;
+        color: $color-white;
+      }
+
+      &:hover:not(.activo) {
+        border-color: $color-primary;
+      }
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: $color-white;
+      border: 1px solid $color-border;
+      border-radius: $radius-sm;
+      padding: 6px $spacing-sm;
+      color: $color-text-muted;
+      font-size: 0.8rem;
+
+      span { color: $color-text-muted; }
+
+      input {
+        border: none;
+        background: transparent;
+        font-family: inherit;
+        font-size: 0.8rem;
+        color: $color-text;
+
+        &:focus { outline: none; }
+      }
+    }
+  }
+
+  &__pedidos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: $spacing-md;
+  }
+
+  &__pedido {
+    position: relative;
+    @include card;
+    padding: $spacing-md;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    overflow: hidden;
+  }
+
+  &__pedido-sello {
+    position: absolute;
+    top: 10px;
+    right: -28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 32px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: $color-white;
+    transform: rotate(35deg);
+    box-shadow: $shadow-sm;
+
+    &--pendiente { background: $color-warning; }
+    &--cobrado { background: $color-primary; }
+  }
+
+  &__pedido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px $spacing-sm;
+    padding-right: $spacing-md;
+
+    strong {
+      font-size: 0.95rem;
+    }
+  }
+
+  &__pedido-hora {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    color: $color-text-muted;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  &__pedido-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-height: 120px;
+    overflow-y: auto;
+    border-top: 1px dashed $color-border;
+    border-bottom: 1px dashed $color-border;
+    padding: $spacing-xs 0;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: $color-text-muted;
+
+      span:last-child {
+        color: $color-text;
+        font-weight: 600;
+      }
+    }
+  }
+
+  &__pedido-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+  }
+
+  &__pedido-acciones {
+    display: flex;
+    gap: $spacing-xs;
+  }
+
+  &__pedido-cobrar {
+    @include button-base;
+    flex: 1;
+    background: $color-primary;
+    color: $color-white;
+    font-size: 0.85rem;
+    padding: $spacing-xs $spacing-sm;
+
+    &:hover:not(:disabled) { background: $color-primary-dark; }
+  }
+
+  &__pedido-eliminar {
+    @include icon-button;
+    border: 1px solid $color-border;
+
+    &:hover {
+      background: $color-danger-light;
+      color: $color-danger;
+    }
+  }
+
+  &__form-guardar-nota {
+    font-size: 0.78rem;
+    color: $color-text-muted;
+    margin: $spacing-xs 0 0;
   }
 
   &__carrito {
     @include card;
-    width: 320px;
+    width: 340px;
+    flex-shrink: 0;
     position: sticky;
     top: $spacing-lg;
     display: flex;
     flex-direction: column;
 
+    @media (max-width: 900px) {
+      width: 100%;
+    }
+  }
+
+  &__carrito-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-sm;
+
     h2 {
-      margin-top: 0;
-      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      margin: 0;
+      font-size: 1.05rem;
+    }
+  }
+
+  &__carrito-contador {
+    @include flex-center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: $radius-full;
+    background: $color-primary;
+    color: $color-white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  &__vaciar {
+    @include icon-button;
+    color: $color-text-muted;
+
+    &:hover {
+      background: $color-danger-light;
+      color: $color-danger;
     }
   }
 
   &__carrito-vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-sm;
     color: $color-text-muted;
-    font-size: 0.85rem;
+    padding: $spacing-xl 0;
+    text-align: center;
+
+    svg {
+      opacity: 0.4;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.85rem;
+    }
   }
 
   &__carrito-items {
@@ -103,12 +455,27 @@
   &__item-info {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     font-size: 0.9rem;
     margin-bottom: $spacing-xs;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  &__item-nombre {
+    font-weight: 600;
+  }
+
+  &__item-precio-unit {
+    font-size: 11px;
+    color: $color-text-muted;
   }
 
   &__item-subtotal {
-    font-weight: 600;
+    font-weight: 700;
   }
 
   &__item-controles {
@@ -117,13 +484,15 @@
     gap: $spacing-sm;
 
     button {
+      @include flex-center;
       border: 1px solid $color-border;
       background: $color-white;
       border-radius: $radius-sm;
       width: 26px;
       height: 26px;
       cursor: pointer;
-      font-size: 0.9rem;
+      color: $color-text;
+      transition: background $transition-fast;
 
       &:hover {
         background: $color-bg;
@@ -135,6 +504,10 @@
     margin-left: auto;
     color: $color-danger;
     border-color: transparent !important;
+
+    &:hover {
+      background: $color-danger-light !important;
+    }
   }
 
   &__total {
@@ -154,25 +527,46 @@
     text-align: center;
 
     &--ok {
-      background: rgba($color-secondary, 0.12);
-      color: $color-secondary;
+      background: $color-primary-light;
+      color: $color-primary-dark;
     }
 
     &--error {
-      background: rgba($color-danger, 0.1);
+      background: $color-danger-light;
       color: $color-danger;
+    }
+  }
+
+  &__acciones-cobro {
+    display: flex;
+    gap: $spacing-sm;
+  }
+
+  &__guardar {
+    @include button-base;
+    flex: 1;
+    background: $color-white;
+    border: 1px solid $color-border;
+    color: $color-text;
+    padding: $spacing-md;
+
+    &:hover:not(:disabled) {
+      background: $color-bg;
+      border-color: $color-text-muted;
     }
   }
 
   &__confirmar {
     @include button-base;
-    background: $color-secondary;
+    flex: 1.4;
+    background: $color-primary;
     color: $color-white;
     font-size: 1rem;
     padding: $spacing-md;
+    box-shadow: $shadow-sm;
 
     &:hover:not(:disabled) {
-      opacity: 0.9;
+      background: $color-primary-dark;
     }
   }
 }
