@@ -3,21 +3,38 @@
 
 .login {
     @include flex-center;
-    height: 100vh;
+    min-height: 100vh;
     padding: $spacing-md;
+    background:
+        radial-gradient(circle at 15% 20%, rgba($color-primary, 0.12), transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba($color-primary-dark, 0.1), transparent 45%),
+        $color-bg;
 
     &__card {
         @include card;
+        box-shadow: $shadow-lg;
         width: 100%;
-        max-width: 360px;
+        max-width: 380px;
         display: flex;
         flex-direction: column;
     }
 
+    &__icono {
+        @include flex-center;
+        width: 56px;
+        height: 56px;
+        margin: 0 auto $spacing-md;
+        border-radius: $radius-md;
+        background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+        color: $color-white;
+        box-shadow: $shadow-sm;
+    }
+
     &__title {
         margin: 0 0 $spacing-xs;
-        color: $color-primary-dark;
-        font-size: 1.6rem;
+        color: $color-text;
+        font-size: 1.4rem;
+        font-weight: 700;
         text-align: center;
     }
 
@@ -28,40 +45,52 @@
         font-size: 0.9rem;
 
         &--slogan {
-            color: $color-text-muted;
+            color: $color-primary-dark;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 600;
             margin: 0 0 10px;
         }
     }
 
     &__error {
-        background: rgba($color-danger, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: $color-danger-light;
         color: $color-danger;
         border-radius: $radius-sm;
         padding: $spacing-sm;
         margin-bottom: $spacing-md;
         font-size: 0.85rem;
-        text-align: center;
     }
 
     &__label {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         font-weight: 600;
-        margin-bottom: $spacing-xs;
-        color: $color-text;
+        color: $color-text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        margin-bottom: 6px;
+    }
+
+    &__input-wrap {
+        position: relative;
+        margin-bottom: $spacing-md;
+    }
+
+    &__input-icono {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $color-text-muted;
+        pointer-events: none;
     }
 
     &__input {
-        border: 1px solid $color-border;
-        border-radius: $radius-sm;
-        padding: $spacing-sm;
-        margin-bottom: $spacing-md;
-
-        &:focus {
-            outline: none;
-            border-color: $color-primary;
-        }
+        @include input-base;
+        padding-left: 34px;
     }
 
     &__submit {
@@ -69,6 +98,8 @@
         background: $color-primary;
         color: $color-white;
         margin-top: $spacing-sm;
+        padding: $spacing-md;
+        box-shadow: $shadow-sm;
 
         &:hover:not(:disabled) {
             background: $color-primary-dark;

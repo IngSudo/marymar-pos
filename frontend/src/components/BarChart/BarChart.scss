@@ -1,0 +1,90 @@
+@use '../../styles/variables' as *;
+
+.bar-chart {
+  position: relative;
+  width: 100%;
+
+  &__leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__leyenda-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    font-weight: 600;
+  }
+
+  &__leyenda-punto {
+    width: 9px;
+    height: 9px;
+    border-radius: $radius-full;
+    flex-shrink: 0;
+  }
+
+  &__svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  &__grid {
+    stroke: $color-border;
+    stroke-width: 1;
+
+    &--base {
+      stroke: $color-text-muted;
+      opacity: 0.5;
+    }
+  }
+
+  &__tick {
+    font-size: 10px;
+    fill: $color-text-muted;
+  }
+
+  &__barra {
+    transition: opacity $transition-fast;
+  }
+
+  &__barra-grupo {
+    cursor: pointer;
+
+    &:hover .bar-chart__barra {
+      opacity: 0.82;
+    }
+  }
+
+  &__etiqueta {
+    font-size: 11px;
+    fill: $color-text-muted;
+    font-weight: 600;
+  }
+
+  &__tooltip {
+    position: absolute;
+    z-index: 5;
+    transform: translate(-50%, -100%) translateY(-10px);
+    background: $color-text;
+    color: $color-white;
+    padding: 6px 10px;
+    border-radius: $radius-sm;
+    font-size: $font-size-xs;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: $shadow-md;
+
+    strong {
+      font-size: $font-size-xs;
+      margin-bottom: 2px;
+    }
+  }
+}

@@ -2,16 +2,101 @@
 @use '../../styles/mixins' as *;
 
 .home {
-  h1 {
-    color: $color-primary-dark;
+  &__hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+    color: $color-white;
+    border-radius: $radius-lg;
+    padding: $spacing-lg $spacing-xl;
     margin-bottom: $spacing-lg;
+    overflow: hidden;
+    box-shadow: $shadow-md;
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: $radius-full;
+      background: rgba($color-white, 0.08);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      right: 40px;
+      bottom: -70px;
+      width: 140px;
+      height: 140px;
+      border-radius: $radius-full;
+      background: rgba($color-white, 0.06);
+    }
+  }
+
+  &__hero-icono {
+    @include flex-center;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    border-radius: $radius-md;
+    background: rgba($color-white, 0.16);
+    z-index: 1;
+  }
+
+  &__hero-texto {
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+  }
+
+  &__hero-saludo {
+    font-size: $font-size-xl;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  &__hero-fecha {
+    font-size: $font-size-sm;
+    text-transform: capitalize;
+    opacity: 0.85;
+  }
+
+  &__hero-frase {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    z-index: 1;
+    font-size: $font-size-sm;
+    font-style: italic;
+    background: rgba($color-white, 0.14);
+    padding: 8px 14px;
+    border-radius: $radius-full;
+    max-width: 280px;
+  }
+
+  &__panel {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: $spacing-lg;
+    margin-bottom: $spacing-xl;
+    align-items: stretch;
+
+    @media (max-width: 860px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   &__resumen {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: $spacing-md;
-    margin-bottom: $spacing-xl;
   }
 
   &__card {
@@ -19,9 +104,10 @@
     display: flex;
     flex-direction: column;
     gap: $spacing-xs;
+    justify-content: center;
 
     &--positivo &-valor {
-      color: $color-secondary;
+      color: $color-primary;
     }
 
     &--negativo &-valor {
@@ -30,13 +116,31 @@
   }
 
   &__card-label {
-    font-size: 0.8rem;
+    font-size: $font-size-xs;
     color: $color-text-muted;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
   }
 
   &__card-valor {
-    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: $font-size-xl;
     font-weight: 700;
+  }
+
+  &__comparativa {
+    @include card;
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+      font-size: $font-size-md;
+      font-weight: 700;
+      margin: 0 0 $spacing-sm;
+    }
   }
 
   &__menu-header {
@@ -48,7 +152,7 @@
     gap: $spacing-sm;
 
     h2 {
-      font-size: 1.1rem;
+      font-size: $font-size-lg;
       margin: 0;
     }
   }
@@ -59,11 +163,10 @@
     align-items: center;
 
     select {
-      border: 1px solid $color-border;
-      border-radius: $radius-sm;
+      @include input-base;
+      width: auto;
       padding: $spacing-xs $spacing-sm;
-      font-size: 0.85rem;
-      background: $color-white;
+      font-size: $font-size-sm;
     }
   }
 
@@ -71,6 +174,7 @@
     @include button-base;
     background: $color-primary;
     color: $color-white;
+    box-shadow: $shadow-sm;
 
     &:hover {
       background: $color-primary-dark;
@@ -93,6 +197,12 @@
     display: flex;
     flex-direction: column;
     gap: $spacing-xs;
+    transition: box-shadow $transition-fast, transform $transition-fast;
+
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: translateY(-2px);
+    }
   }
 
   &__plato-nombre {
@@ -100,13 +210,15 @@
   }
 
   &__plato-categoria {
-    font-size: 0.75rem;
+    font-size: $font-size-xs;
     color: $color-text-muted;
     text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
 
   &__plato-precio {
     color: $color-primary-dark;
     font-weight: 700;
+    font-size: $font-size-lg;
   }
 }
