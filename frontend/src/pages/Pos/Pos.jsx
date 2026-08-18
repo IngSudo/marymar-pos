@@ -6,7 +6,7 @@ import {
 import { obtenerProductos } from '../../api/productos';
 import { obtenerCategorias } from '../../api/categorias';
 import { registrarVenta, obtenerVentas } from '../../api/ventas';
-import { hoyISO } from '../../utils/fechas';
+import { hoyISO, fechaLocalISO } from '../../utils/fechas';
 import { leerCarrito, guardarCarrito, leerPendientes, guardarPendientes } from '../../utils/posStorage';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import Modal from '../../components/modal/Modal';
@@ -181,7 +181,7 @@ export default function Pos() {
   const pedidosFiltrados = useMemo(() => {
     const guardados = pendientes
       .filter((p) => {
-        const fechaPedido = p.creadoEn.slice(0, 10);
+        const fechaPedido = fechaLocalISO(p.creadoEn);
         return fechaPedido >= filtroDesde && fechaPedido <= filtroHasta;
       })
       .map((p) => ({

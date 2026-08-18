@@ -14,6 +14,10 @@ export function hoyISO() {
   return aISO(new Date());
 }
 
+export function fechaLocalISO(fechaOInstante) {
+  return aISO(new Date(fechaOInstante));
+}
+
 export function mesActualISO() {
   const hoy = new Date();
   return `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}`;
