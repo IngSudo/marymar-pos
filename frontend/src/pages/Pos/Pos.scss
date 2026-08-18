@@ -3,11 +3,18 @@
 
 .pos {
   display: flex;
-  gap: $spacing-lg;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: $spacing-xl;
 
-  @media (max-width: 900px) {
-    flex-direction: column;
+  &__fila-superior {
+    display: flex;
+    gap: $spacing-lg;
+    align-items: flex-start;
+
+    @media (max-width: $breakpoint-tablet) {
+      flex-direction: column;
+      align-items: stretch;
+    }
   }
 
   &__productos {
@@ -106,6 +113,11 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: $spacing-sm;
+
+    @media (max-width: $breakpoint-movil) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: $spacing-xs;
+    }
   }
 
   &__producto {
@@ -174,8 +186,6 @@
   }
 
   &__pedidos {
-    margin-top: $spacing-xl;
-
     h2 {
       display: flex;
       align-items: center;
@@ -377,7 +387,7 @@
     display: flex;
     flex-direction: column;
 
-    @media (max-width: 900px) {
+    @media (max-width: $breakpoint-tablet) {
       width: 100%;
     }
   }

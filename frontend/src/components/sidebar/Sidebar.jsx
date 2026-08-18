@@ -31,7 +31,7 @@ const itemsAdmin = [
   { to: '/admin/configuracion', label: 'Configuración', icon: Settings },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ abierto, onCerrar }) {
   const { usuario, esSesionElevada, logout } = useAuth();
   const esAdmin = usuario?.rol === 'ADMIN';
   const iniciales = usuario?.nombre
@@ -42,12 +42,12 @@ export default function Sidebar() {
     .toUpperCase();
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${abierto ? 'sidebar--abierto' : ''}`}>
       <div className="sidebar__brand">
         <span className="sidebar__brand-icon">
           <Empanada size={18} strokeWidth={2.25} />
         </span>
-        MaryMar POS
+        MaryMar
       </div>
 
       <nav className="sidebar__nav">
@@ -56,6 +56,7 @@ export default function Sidebar() {
             key={item.to}
             to={item.to}
             end={item.to === '/'}
+            onClick={onCerrar}
             className={({ isActive }) => `sidebar__link${isActive ? ' sidebar__link--active' : ''}`}
           >
             <item.icon className="sidebar__icon" size={18} strokeWidth={2} />
@@ -70,6 +71,7 @@ export default function Sidebar() {
               <NavLink
                 key={item.to}
                 to={item.to}
+                onClick={onCerrar}
                 className={({ isActive }) => `sidebar__link${isActive ? ' sidebar__link--active' : ''}`}
               >
                 <item.icon className="sidebar__icon" size={18} strokeWidth={2} />
@@ -90,12 +92,12 @@ export default function Sidebar() {
         </div>
 
         {esSesionElevada ? (
-          <button className="sidebar__logout" onClick={logout}>
+          <button className="sidebar__logout" onClick={() => { logout(); onCerrar?.(); }}>
             <LogOut size={16} strokeWidth={2} />
             Cerrar sesión
           </button>
         ) : (
-          <Link className="sidebar__logout" to="/login">
+          <Link className="sidebar__logout" to="/login" onClick={onCerrar}>
             <LogIn size={16} strokeWidth={2} />
             Iniciar sesión como admin
           </Link>

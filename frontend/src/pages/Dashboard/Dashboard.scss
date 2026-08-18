@@ -110,7 +110,7 @@
     gap: $spacing-md;
     align-items: stretch;
 
-    @media (max-width: 760px) {
+    @media (max-width: $breakpoint-tablet) {
       grid-template-columns: 1fr;
     }
   }

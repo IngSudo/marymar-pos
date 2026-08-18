@@ -11,6 +11,25 @@
     position: sticky;
     top: 0;
     z-index: $z-sidebar;
+    transition: transform $transition-base;
+
+    @media (max-width: $breakpoint-tablet) {
+        position: fixed;
+        left: 0;
+        top: $altura-topbar-movil;
+        height: calc(100vh - #{$altura-topbar-movil});
+        z-index: $z-sidebar-movil;
+        transform: translateX(-100%);
+        box-shadow: $shadow-lg;
+
+        &--abierto {
+            transform: translateX(0);
+        }
+
+        .sidebar__brand {
+            display: none;
+        }
+    }
 
     &__brand {
         display: flex;

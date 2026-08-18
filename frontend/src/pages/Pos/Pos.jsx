@@ -208,6 +208,7 @@ export default function Pos() {
 
   return (
     <div className="pos">
+      <div className="pos__fila-superior">
       <div className="pos__productos">
         <div className="pos__toolbar">
           <h1>Vender</h1>
@@ -260,80 +261,6 @@ export default function Pos() {
               <span className="pos__producto-agregar"><Plus size={14} strokeWidth={2.5} /></span>
             </button>
           ))}
-        </div>
-
-        <div className="pos__pedidos">
-          <div className="pos__pedidos-header">
-            <h2><ClipboardList size={17} strokeWidth={2} /> Pedidos</h2>
-            <div className="pos__pedidos-filtro">
-              <button className={filtroEsHoy ? 'activo' : ''} onClick={irAHoy}>Hoy</button>
-              <label>
-                <CalendarRange size={13} strokeWidth={2} />
-                <input type="date" value={filtroDesde} max={filtroHasta} onChange={(e) => setFiltroDesde(e.target.value)} />
-                <span>→</span>
-                <input type="date" value={filtroHasta} min={filtroDesde} max={hoyISO()} onChange={(e) => setFiltroHasta(e.target.value)} />
-              </label>
-            </div>
-          </div>
-
-          {pedidosFiltrados.length === 0 && (
-            <p className="pos__sin-resultados">No hay pedidos guardados ni ventas cobradas en este rango.</p>
-          )}
-
-          <div className="pos__pedidos-grid">
-            {pedidosFiltrados.map((pedido) => (
-              <div key={pedido.id} className="pos__pedido">
-                <span className={`pos__pedido-sello ${pedido.tipo === 'cobrado' ? 'pos__pedido-sello--cobrado' : 'pos__pedido-sello--pendiente'}`}>
-                  {pedido.tipo === 'cobrado' ? <CheckCircle2 size={11} strokeWidth={2.5} /> : <Hourglass size={11} strokeWidth={2.5} />}
-                  {pedido.tipo === 'cobrado' ? 'Cobrado' : 'Pendiente'}
-                </span>
-
-                <div className="pos__pedido-header">
-                  <strong>{pedido.etiqueta}</strong>
-                  <span className="pos__pedido-hora">
-                    <Clock size={11} strokeWidth={2} />
-                    {new Date(pedido.hora).toLocaleDateString('es-EC', { day: '2-digit', month: 'short' })}
-                    {', '}
-                    {new Date(pedido.hora).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
-
-                <ul className="pos__pedido-items">
-                  {pedido.items.map((it, idx) => (
-                    <li key={idx}>
-                      <span>{it.cantidad}× {it.nombre}</span>
-                      <span>${(it.precio * it.cantidad).toFixed(2)}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="pos__pedido-total">
-                  <span>Total</span>
-                  <span>${pedido.total.toFixed(2)}</span>
-                </div>
-
-                {pedido.tipo === 'pendiente' && (
-                  <div className="pos__pedido-acciones">
-                    <button
-                      className="pos__pedido-cobrar"
-                      disabled={cobrandoId === pedido.id}
-                      onClick={() => cobrarPendiente(pedido)}
-                    >
-                      {cobrandoId === pedido.id ? 'Cobrando...' : 'Cobrar'}
-                    </button>
-                    <button
-                      className="pos__pedido-eliminar"
-                      onClick={() => setPendienteAEliminar(pedido)}
-                      title="Descartar pedido"
-                      aria-label="Descartar pedido"
-                    >
-                      <Trash2 size={14} strokeWidth={2} />
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -412,6 +339,81 @@ export default function Pos() {
           </button>
         </div>
       </aside>
+      </div>
+
+      <div className="pos__pedidos">
+        <div className="pos__pedidos-header">
+          <h2><ClipboardList size={17} strokeWidth={2} /> Pedidos</h2>
+          <div className="pos__pedidos-filtro">
+            <button className={filtroEsHoy ? 'activo' : ''} onClick={irAHoy}>Hoy</button>
+            <label>
+              <CalendarRange size={13} strokeWidth={2} />
+              <input type="date" value={filtroDesde} max={filtroHasta} onChange={(e) => setFiltroDesde(e.target.value)} />
+              <span>→</span>
+              <input type="date" value={filtroHasta} min={filtroDesde} max={hoyISO()} onChange={(e) => setFiltroHasta(e.target.value)} />
+            </label>
+          </div>
+        </div>
+
+        {pedidosFiltrados.length === 0 && (
+          <p className="pos__sin-resultados">No hay pedidos guardados ni ventas cobradas en este rango.</p>
+        )}
+
+        <div className="pos__pedidos-grid">
+          {pedidosFiltrados.map((pedido) => (
+            <div key={pedido.id} className="pos__pedido">
+              <span className={`pos__pedido-sello ${pedido.tipo === 'cobrado' ? 'pos__pedido-sello--cobrado' : 'pos__pedido-sello--pendiente'}`}>
+                {pedido.tipo === 'cobrado' ? <CheckCircle2 size={11} strokeWidth={2.5} /> : <Hourglass size={11} strokeWidth={2.5} />}
+                {pedido.tipo === 'cobrado' ? 'Cobrado' : 'Pendiente'}
+              </span>
+
+              <div className="pos__pedido-header">
+                <strong>{pedido.etiqueta}</strong>
+                <span className="pos__pedido-hora">
+                  <Clock size={11} strokeWidth={2} />
+                  {new Date(pedido.hora).toLocaleDateString('es-EC', { day: '2-digit', month: 'short' })}
+                  {', '}
+                  {new Date(pedido.hora).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+
+              <ul className="pos__pedido-items">
+                {pedido.items.map((it, idx) => (
+                  <li key={idx}>
+                    <span>{it.cantidad}× {it.nombre}</span>
+                    <span>${(it.precio * it.cantidad).toFixed(2)}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="pos__pedido-total">
+                <span>Total</span>
+                <span>${pedido.total.toFixed(2)}</span>
+              </div>
+
+              {pedido.tipo === 'pendiente' && (
+                <div className="pos__pedido-acciones">
+                  <button
+                    className="pos__pedido-cobrar"
+                    disabled={cobrandoId === pedido.id}
+                    onClick={() => cobrarPendiente(pedido)}
+                  >
+                    {cobrandoId === pedido.id ? 'Cobrando...' : 'Cobrar'}
+                  </button>
+                  <button
+                    className="pos__pedido-eliminar"
+                    onClick={() => setPendienteAEliminar(pedido)}
+                    title="Descartar pedido"
+                    aria-label="Descartar pedido"
+                  >
+                    <Trash2 size={14} strokeWidth={2} />
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
 
       {confirmarVaciar && (
         <ConfirmModal

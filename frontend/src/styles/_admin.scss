@@ -6,6 +6,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
     margin-bottom: $spacing-lg;
 
     h1 {
@@ -40,10 +42,12 @@
   &__tabla {
     @include card;
     padding: 0;
-    overflow: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 
     table {
       width: 100%;
+      min-width: 480px;
       border-collapse: collapse;
     }
 
@@ -144,6 +148,7 @@
 
   &__filtros {
     display: flex;
+    flex-wrap: wrap;
     gap: $spacing-sm;
     margin-bottom: $spacing-md;
 

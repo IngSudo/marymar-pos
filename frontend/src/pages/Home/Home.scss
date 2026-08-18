@@ -88,7 +88,7 @@
     margin-bottom: $spacing-xl;
     align-items: stretch;
 
-    @media (max-width: 860px) {
+    @media (max-width: $breakpoint-tablet) {
       grid-template-columns: 1fr;
     }
   }
