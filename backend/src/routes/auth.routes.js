@@ -10,7 +10,9 @@ router.post("/login", async (req, res) => {
   const { usuario, password } = req.body;
 
   try {
-    const user = await prisma.usuario.findUnique({ where: { usuario } });
+    const user = await prisma.usuario.findFirst({
+      where: { usuario: { equals: usuario, mode: 'insensitive' } },
+    });
     if (!user) {
       return res
         .status(401)
