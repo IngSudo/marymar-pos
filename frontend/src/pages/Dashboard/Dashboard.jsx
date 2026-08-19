@@ -7,6 +7,7 @@ import {
   rangoHoy, rangoAyer, rangoSemanaActual, rangoSemanaAnterior, rangoMesActual, rangoMesAnterior,
   rangoDeMes, mesAnteriorA, nombreDeMes, mesActualISO, rangoAnteriorEquivalente, hoyISO,
 } from '../../utils/fechas';
+import { delta } from '../../utils/finanzas';
 import BarChart from '../../components/BarChart/BarChart';
 import { chartColors } from '../../styles/chartColors';
 import './Dashboard.scss';
@@ -16,15 +17,6 @@ const PERIODOS_FIJOS = {
   semana: { actual: rangoSemanaActual, anterior: rangoSemanaAnterior, etiqueta: 'Esta semana', comparaCon: 'semana pasada' },
   mes: { actual: rangoMesActual, anterior: rangoMesAnterior, etiqueta: 'Este mes', comparaCon: 'mes pasado' },
 };
-
-function delta(actual, anterior) {
-  if (!anterior) return null;
-  const bruto = ((actual - anterior) / Math.abs(anterior)) * 100;
-  const magnitud = Math.abs(bruto);
-  const positivo = bruto >= 0;
-  if (magnitud > 100) return { texto: '>100%', positivo };
-  return { texto: `${magnitud.toFixed(1)}%`, positivo };
-}
 
 export default function Dashboard() {
   const [periodo, setPeriodo] = useState('hoy');

@@ -131,6 +131,17 @@
     font-weight: 700;
   }
 
+  &__card-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    &.positivo { color: $color-secondary; }
+    &.negativo { color: $color-danger; }
+  }
+
   &__comparativa {
     @include card;
     display: flex;

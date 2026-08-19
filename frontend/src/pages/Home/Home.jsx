@@ -9,6 +9,8 @@ import FormularioProducto from '../../components/FormularioProducto/FormularioPr
 import BarChart from '../../components/BarChart/BarChart';
 import Empanada from '../../components/icons/Empanada';
 import { chartColors } from '../../styles/chartColors';
+import { rangoHoy, rangoAyer } from '../../utils/fechas';
+import { delta } from '../../utils/finanzas';
 import './Home.scss';
 
 const FRASES = [
@@ -32,6 +34,7 @@ export default function Home() {
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [resumen, setResumen] = useState(null);
+  const [resumenAyer, setResumenAyer] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [modalAbierta, setModalAbierta] = useState(false);
   const [filtroCategoria, setFiltroCategoria] = useState('');
@@ -48,12 +51,17 @@ export default function Home() {
     setCargando(true);
     try {
       const promesas = [obtenerProductos(), obtenerCategorias()];
-      if (esAdmin) promesas.push(obtenerResumen());
+      if (esAdmin) {
+        const { desde: hoyDesde, hasta: hoyHasta } = rangoHoy();
+        const { desde: ayerDesde, hasta: ayerHasta } = rangoAyer();
+        promesas.push(obtenerResumen(hoyDesde, hoyHasta), obtenerResumen(ayerDesde, ayerHasta));
+      }
 
-      const [productosData, categoriasData, resumenData] = await Promise.all(promesas);
+      const [productosData, categoriasData, resumenData, resumenAyerData] = await Promise.all(promesas);
       setProductos(productosData.filter((p) => p.activo));
       setCategorias(categoriasData);
       if (resumenData) setResumen(resumenData);
+      if (resumenAyerData) setResumenAyer(resumenAyerData);
     } finally {
       setCargando(false);
     }
@@ -69,15 +77,18 @@ export default function Home() {
     return productos.filter((p) => p.categoriaId === Number(filtroCategoria));
   }, [productos, filtroCategoria]);
 
-  const datosComparativa = resumen
+  const deltaIngresos = resumenAyer ? delta(resumen?.ingresos, resumenAyer.ingresos) : null;
+  const deltaGanancia = resumenAyer ? delta(resumen?.gananciaNeta, resumenAyer.gananciaNeta) : null;
+
+  const seriesComparativa = [
+    { key: 'hoy', label: 'Hoy', color: chartColors.primary },
+    { key: 'ayer', label: 'Ayer', color: chartColors.compare },
+  ];
+  const datosComparativa = resumen && resumenAyer
     ? [
-        { label: 'Ingresos', value: resumen.ingresos, color: chartColors.primary },
-        { label: 'Gastos', value: resumen.gastosVariables, color: chartColors.warning },
-        {
-          label: 'Ganancia',
-          value: resumen.gananciaNeta,
-          color: resumen.gananciaNeta >= 0 ? chartColors.primary : chartColors.danger,
-        },
+        { label: 'Ingresos', valores: { hoy: resumen.ingresos, ayer: resumenAyer.ingresos } },
+        { label: 'Gastos', valores: { hoy: resumen.gastosVariables, ayer: resumenAyer.gastosVariables } },
+        { label: 'Ganancia', valores: { hoy: resumen.gananciaNeta, ayer: resumenAyer.gananciaNeta } },
       ]
     : [];
 
@@ -103,6 +114,12 @@ export default function Home() {
             <div className="home__card">
               <span className="home__card-label">Ingresos hoy</span>
               <span className="home__card-valor">${resumen.ingresos.toFixed(2)}</span>
+              {deltaIngresos && (
+                <span className={`home__card-delta ${deltaIngresos.positivo ? 'positivo' : 'negativo'}`}>
+                  {deltaIngresos.positivo ? <TrendingUp size={13} strokeWidth={2.5} /> : <TrendingDown size={13} strokeWidth={2.5} />}
+                  {deltaIngresos.texto} vs ayer
+                </span>
+              )}
             </div>
             <div className={`home__card ${resumen.gananciaNeta >= 0 ? 'home__card--positivo' : 'home__card--negativo'}`}>
               <span className="home__card-label">Ganancia neta</span>
@@ -110,6 +127,12 @@ export default function Home() {
                 {resumen.gananciaNeta >= 0 ? <TrendingUp size={16} strokeWidth={2.5} /> : <TrendingDown size={16} strokeWidth={2.5} />}
                 ${resumen.gananciaNeta.toFixed(2)}
               </span>
+              {deltaGanancia && (
+                <span className={`home__card-delta ${deltaGanancia.positivo ? 'positivo' : 'negativo'}`}>
+                  {deltaGanancia.positivo ? <TrendingUp size={13} strokeWidth={2.5} /> : <TrendingDown size={13} strokeWidth={2.5} />}
+                  {deltaGanancia.texto} vs ayer
+                </span>
+              )}
             </div>
             <div className="home__card">
               <span className="home__card-label">Margen</span>
@@ -122,8 +145,8 @@ export default function Home() {
           </div>
 
           <div className="home__comparativa">
-            <h2>Comparativa del día</h2>
-            <BarChart data={datosComparativa} />
+            <h2>Comparativa — hoy vs ayer</h2>
+            <BarChart data={datosComparativa} series={seriesComparativa} />
           </div>
         </div>
       )}
