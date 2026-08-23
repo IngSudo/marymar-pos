@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Plus, Wallet, Receipt, Calendar, CalendarRange } from 'lucide-react';
-import { obtenerGastos } from '../../api/gastos';
+import { Plus, Wallet, Receipt, Calendar, CalendarRange, Pencil, Trash2 } from 'lucide-react';
+import { obtenerGastos, eliminarGasto } from '../../api/gastos';
 import { rangoDeMes, mesActualISO, hoyISO } from '../../utils/fechas';
 import Modal from '../../components/modal/Modal';
+import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import FormularioGasto from '../../components/FormularioGasto/FormularioGasto';
 import '../../styles/_admin.scss';
 import './Gastos.scss';
@@ -11,6 +12,8 @@ export default function Gastos() {
   const [gastos, setGastos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [modalAbierta, setModalAbierta] = useState(false);
+  const [editando, setEditando] = useState(null);
+  const [gastoAEliminar, setGastoAEliminar] = useState(null);
 
   const [modoFiltro, setModoFiltro] = useState('mes');
   const [mes, setMes] = useState(mesActualISO());
@@ -40,6 +43,16 @@ export default function Gastos() {
 
   function handleGuardado() {
     setModalAbierta(false);
+    setEditando(null);
+    cargar();
+  }
+
+  function abrirCrear() { setEditando(null); setModalAbierta(true); }
+  function abrirEditar(g) { setEditando(g); setModalAbierta(true); }
+
+  async function confirmarEliminarGasto() {
+    await eliminarGasto(gastoAEliminar.id);
+    setGastoAEliminar(null);
     cargar();
   }
 
@@ -49,7 +62,7 @@ export default function Gastos() {
     <div className="admin-page">
       <div className="admin-page__header">
         <h1>Gastos</h1>
-        <button className="admin-page__agregar" onClick={() => setModalAbierta(true)}>
+        <button className="admin-page__agregar" onClick={abrirCrear}>
           <Plus size={16} strokeWidth={2.5} />
           Registrar gasto
         </button>
@@ -90,11 +103,11 @@ export default function Gastos() {
       {!cargando && (
         <div className="admin-page__tabla">
           <table>
-            <thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th></tr></thead>
+            <thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th><th>Acciones</th></tr></thead>
             <tbody>
               {gastos.length === 0 && (
                 <tr>
-                  <td colSpan={3} className="admin-page__vacio">
+                  <td colSpan={4} className="admin-page__vacio">
                     <Receipt size={22} strokeWidth={1.5} style={{ display: 'block', margin: '0 auto 8px', opacity: 0.5 }} />
                     Sin gastos en este periodo
                   </td>
@@ -105,6 +118,14 @@ export default function Gastos() {
                   <td>{new Date(g.fecha).toLocaleDateString('es-EC')}</td>
                   <td>{g.descripcion}</td>
                   <td>${Number(g.monto).toFixed(2)}</td>
+                  <td className="admin-page__acciones">
+                    <button className="editar" onClick={() => abrirEditar(g)} title="Editar" aria-label="Editar">
+                      <Pencil size={15} strokeWidth={2} />
+                    </button>
+                    <button className="eliminar" onClick={() => setGastoAEliminar(g)} title="Eliminar" aria-label="Eliminar">
+                      <Trash2 size={15} strokeWidth={2} />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -113,9 +134,18 @@ export default function Gastos() {
       )}
 
       {modalAbierta && (
-        <Modal titulo="Registrar gasto" onClose={() => setModalAbierta(false)}>
-          <FormularioGasto onGuardado={handleGuardado} />
+        <Modal titulo={editando ? 'Editar gasto' : 'Registrar gasto'} onClose={() => { setModalAbierta(false); setEditando(null); }}>
+          <FormularioGasto gastoExistente={editando} onGuardado={handleGuardado} />
         </Modal>
+      )}
+
+      {gastoAEliminar && (
+        <ConfirmModal
+          titulo="Eliminar gasto"
+          mensaje={`¿Eliminar el gasto "${gastoAEliminar.descripcion}" por $${Number(gastoAEliminar.monto).toFixed(2)}? Esta acción no se puede deshacer.`}
+          onConfirmar={confirmarEliminarGasto}
+          onCancelar={() => setGastoAEliminar(null)}
+        />
       )}
     </div>
   );

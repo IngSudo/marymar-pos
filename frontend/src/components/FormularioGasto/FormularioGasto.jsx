@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { crearGasto } from "../../api/gastos";
+import { crearGasto, editarGasto } from "../../api/gastos";
+import { fechaLocalISO } from "../../utils/fechas";
 
-export default function FormularioGasto({ onGuardado }) {
-  const [descripcion, setDescripcion] = useState("");
-  const [monto, setMonto] = useState("");
+export default function FormularioGasto({ gastoExistente, onGuardado }) {
+  const esEdicion = Boolean(gastoExistente);
+  const [descripcion, setDescripcion] = useState(gastoExistente?.descripcion || "");
+  const [monto, setMonto] = useState(gastoExistente?.monto || "");
+  const [fecha, setFecha] = useState(gastoExistente ? fechaLocalISO(gastoExistente.fecha) : "");
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
 
@@ -12,10 +15,14 @@ export default function FormularioGasto({ onGuardado }) {
     setError("");
     setGuardando(true);
     try {
-      await crearGasto({ descripcion, monto: Number(monto) });
+      if (esEdicion) {
+        await editarGasto(gastoExistente.id, { descripcion, monto: Number(monto), fecha });
+      } else {
+        await crearGasto({ descripcion, monto: Number(monto) });
+      }
       onGuardado();
     } catch (err) {
-      setError("No se pudo registrar el gasto");
+      setError(esEdicion ? "No se pudo actualizar el gasto" : "No se pudo registrar el gasto");
     } finally {
       setGuardando(false);
     }
@@ -41,8 +48,14 @@ export default function FormularioGasto({ onGuardado }) {
         onChange={(e) => setMonto(e.target.value)}
         required
       />
+      {esEdicion && (
+        <>
+          <label>Fecha</label>
+          <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} required />
+        </>
+      )}
       <button type="submit" disabled={guardando}>
-        {guardando ? "Guardando..." : "Registrar gasto"}
+        {guardando ? "Guardando..." : esEdicion ? "Guardar cambios" : "Registrar gasto"}
       </button>
     </form>
   );

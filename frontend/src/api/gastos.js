@@ -12,3 +12,13 @@ export async function crearGasto(gasto) {
   const { data } = await client.post('/gastos', gasto);
   return data;
 }
+
+export async function editarGasto(id, gasto) {
+  const { data } = await client.put(`/gastos/${id}`, gasto);
+  return data;
+}
+
+export async function eliminarGasto(id) {
+  const { data } = await client.delete(`/gastos/${id}`);
+  return data;
+}
