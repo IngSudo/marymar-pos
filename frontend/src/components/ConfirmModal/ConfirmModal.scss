@@ -23,6 +23,16 @@
     line-height: 1.5;
   }
 
+  &__nota {
+    margin: 0 0 $spacing-lg;
+    padding: $spacing-sm $spacing-md;
+    background: $color-danger-light;
+    color: $color-danger;
+    border-radius: $radius-sm;
+    font-size: $font-size-sm;
+    line-height: 1.5;
+  }
+
   &__acciones {
     display: flex;
     justify-content: flex-end;

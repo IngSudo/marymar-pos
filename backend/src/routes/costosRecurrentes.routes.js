@@ -85,6 +85,11 @@ router.delete('/:id', verificarToken, soloAdmin, async (req, res) => {
     await prisma.costoRecurrente.delete({ where: { id: Number(id) } });
     res.json({ eliminado: true });
   } catch (err) {
+    if (err.code === 'P2003') {
+      return res.status(400).json({
+        error: 'No se puede eliminar: este costo tiene pagos y/o días registrados (pagados, descontados o extras) en su historial. Elimina esos pagos y reactiva esos días primero, o desactívalo en su lugar.',
+      });
+    }
     res.status(400).json({ error: 'No se pudo eliminar' });
   }
 });

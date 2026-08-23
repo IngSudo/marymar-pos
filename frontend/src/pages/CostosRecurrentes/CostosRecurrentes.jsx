@@ -4,7 +4,7 @@ import {
   Clock, CalendarRange, CreditCard, Receipt, ArrowUp, ArrowDown, ArrowUpDown, Trash2,
 } from 'lucide-react';
 import {
-  obtenerCostosRecurrentes, desactivarCostoRecurrente, activarCostoRecurrente, obtenerPendientes,
+  obtenerCostosRecurrentes, desactivarCostoRecurrente, activarCostoRecurrente, obtenerPendientes, eliminarCostoRecurrente,
 } from '../../api/costosRecurrentes';
 import { obtenerPagos, registrarPago, registrarPagoPorDias, registrarPagoCompleto, eliminarPago } from '../../api/pagosCostosRecurrentes';
 import { obtenerDias, invalidarDia, agregarDiaExtra, quitarExcepcionDia } from '../../api/diasCostoRecurrente';
@@ -53,6 +53,8 @@ export default function CostosRecurrentes() {
   const [filtroHasta, setFiltroHasta] = useState(hoyISO());
   const [pagoDetalle, setPagoDetalle] = useState(null);
   const [pagoAEliminar, setPagoAEliminar] = useState(null);
+  const [costoAEliminar, setCostoAEliminar] = useState(null);
+  const [notaEliminarCosto, setNotaEliminarCosto] = useState(null);
 
   useEffect(() => { cargar(); }, []);
 
@@ -96,6 +98,21 @@ export default function CostosRecurrentes() {
   }
 
   function handleGuardado() { setModalAbierta(false); cargar(); }
+
+  function abrirEliminarCosto(c) {
+    setNotaEliminarCosto(null);
+    setCostoAEliminar(c);
+  }
+
+  async function confirmarEliminarCosto() {
+    try {
+      await eliminarCostoRecurrente(costoAEliminar.id);
+      setCostoAEliminar(null);
+      cargar();
+    } catch (err) {
+      setNotaEliminarCosto(err.response?.data?.error || 'No se pudo eliminar el costo');
+    }
+  }
 
   const costosOrdenados = useMemo(() => {
     const lista = [...costos];
@@ -318,6 +335,14 @@ export default function CostosRecurrentes() {
                         aria-label={c.activo ? 'Desactivar' : 'Activar'}
                       >
                         {c.activo ? <PowerOff size={15} strokeWidth={2} /> : <Power size={15} strokeWidth={2} />}
+                      </button>
+                      <button
+                        className="eliminar"
+                        onClick={() => abrirEliminarCosto(c)}
+                        title="Eliminar"
+                        aria-label="Eliminar"
+                      >
+                        <Trash2 size={15} strokeWidth={2} />
                       </button>
                     </td>
                   </tr>
@@ -598,6 +623,16 @@ export default function CostosRecurrentes() {
           mensaje={`¿Eliminar el pago de "${pagoAEliminar.costoRecurrente?.descripcion}" por $${Number(pagoAEliminar.monto).toFixed(2)}? Quedará como si no se hubiera pagado — el monto vuelve a sumarse a lo pendiente. Esta acción no se puede deshacer.`}
           onConfirmar={confirmarEliminarPago}
           onCancelar={() => setPagoAEliminar(null)}
+        />
+      )}
+
+      {costoAEliminar && (
+        <ConfirmModal
+          titulo="Eliminar costo recurrente"
+          mensaje={`¿Eliminar "${costoAEliminar.descripcion}" por completo? Esta acción no se puede deshacer.`}
+          nota={notaEliminarCosto}
+          onConfirmar={confirmarEliminarCosto}
+          onCancelar={() => setCostoAEliminar(null)}
         />
       )}
     </div>

@@ -118,6 +118,11 @@
         background: $color-secondary-light;
         color: $color-secondary;
       }
+
+      &.eliminar:hover {
+        background: $color-danger-light;
+        color: $color-danger;
+      }
     }
   }
 

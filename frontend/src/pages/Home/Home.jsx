@@ -160,12 +160,10 @@ export default function Home() {
               <option key={c.id} value={c.id}>{c.nombre}</option>
             ))}
           </select>
-          {esAdmin && (
-            <button className="home__agregar" onClick={() => setModalAbierta(true)}>
-              <Plus size={16} strokeWidth={2.5} />
-              Agregar plato
-            </button>
-          )}
+          <button className="home__agregar" onClick={() => setModalAbierta(true)}>
+            <Plus size={16} strokeWidth={2.5} />
+            Agregar plato
+          </button>
         </div>
       </div>
 

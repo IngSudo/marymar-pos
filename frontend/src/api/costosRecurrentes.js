@@ -29,3 +29,8 @@ export async function obtenerPendientes() {
   const { data } = await client.get('/costos-recurrentes/pendientes');
   return data;
 }
+
+export async function eliminarCostoRecurrente(id) {
+  const { data } = await client.delete(`/costos-recurrentes/${id}`);
+  return data;
+}
